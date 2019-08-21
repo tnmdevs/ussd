@@ -1,0 +1,26 @@
+{
+    "name": "tnmdev/ussd",
+    "description": "TruRoute USSD Adaptor for Laravel PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TNM Developers",
+            "email": "developers@tnm.co.mw"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "TNM\\USSD\\" : "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TNM\\USSD\\UssdServiceProvider"
+            ]
+        }
+    }
+}
