@@ -1,6 +1,6 @@
-# TNM TruRoute USSD Adaptor
+# TNM TruRoute USSD Adapter
 
-This package creates adaptors for Laravel to send responses to TruRoute USSD Client and decode its USSD requests using built-in Laravel Illuminate Facades.
+This package creates adapters for Laravel to send responses to TruRoute USSD Client and decode its USSD requests using built-in Laravel Illuminate Facades.
 
 ## Installation
 ```
@@ -15,7 +15,7 @@ php artisan migrate
 
 ## Usage
 ### 1.  Decoding Requests
-USSD adaptor decodes xml requests to `request` object that extends `\Illuminate\Http\Request`.
+USSD adapter decodes xml requests to `request` object that extends `\Illuminate\Http\Request`.
 
 To use it pass the TNM USSD Request to your controller methods.
 
@@ -42,7 +42,7 @@ The request class exposes four public properties from the xml request passed on 
 | msisdn | The number making the USSD request |
 
 ### 2. Encoding Response
-USSD adaptor extends Laravel's response facade to generate xml response to send to USSDC.
+USSD adapter extends Laravel's response facade to generate xml response to send to USSDC.
 
 To send USSD response call 
 ```
