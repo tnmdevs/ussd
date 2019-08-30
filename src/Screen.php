@@ -108,8 +108,13 @@ abstract class Screen
      */
     public function render(): string
     {
+        $this->request->trail->update(['state' => static::class]);
         return response()->ussd(
-            sprintf("%s\n%s\n0. Home\n#. Back", $this->message(), $this->optionsAsString()), $this->type()
+            sprintf("%s\n%s %s",
+                $this->message(),
+                $this->optionsAsString(),
+                $this->goesBack() ? "\n0. Home \n#. Back": ""
+            ), $this->type()
         );
     }
 
@@ -120,7 +125,7 @@ abstract class Screen
      */
     public static function handle(Request $request)
     {
-        $screen = self::getInstance($request);
+        $screen = static::getInstance($request);
         $screen->execute($screen->getItemAt($request->message));
     }
 
@@ -133,5 +138,10 @@ abstract class Screen
     {
         if (count($this->options())) return $this->getItemAt($this->request->message);
         return $this->request->message;
+    }
+
+    protected function goesBack(): bool
+    {
+        return true;
     }
 }
