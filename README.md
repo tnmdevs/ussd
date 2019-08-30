@@ -45,7 +45,7 @@ The request class exposes four properties from the xml request passed on by USSD
 USSD adapter extends Laravel's response facade to generate xml response to send to USSDC.
 
 To send USSD response call 
-```
+```php
 return response()->ussd($responseMessage, Response::RELEASE)
 ```
 

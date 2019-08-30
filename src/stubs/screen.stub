@@ -1,0 +1,40 @@
+<?php
+
+
+namespace App\Screens;
+
+
+use TNM\USSD\Screen;
+
+class {{class}} extends Screen
+{
+
+    /**
+     * Add message to the screen
+     *
+     * @return string
+     */
+    protected function message(): string
+    {
+        // TODO: Implement message() method.
+    }
+
+    /**
+     * Add options to the screen
+     * @return array
+     */
+    protected function options(): array
+    {
+        // TODO: Implement options() method.
+    }
+
+    /**
+     * Execute the selected option/action
+     *
+     * @return mixed
+     */
+    protected function execute()
+    {
+        // TODO: Implement execute() method.
+    }
+}

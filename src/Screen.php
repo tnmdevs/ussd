@@ -25,16 +25,6 @@ abstract class Screen
     {
         $this->request = $request;
     }
-    /**
-     * Create an instance of a screen
-     *
-     * @param Request $request
-     * @return Screen
-     */
-    private static function getInstance(Request $request): Screen
-    {
-        return new $request->trail->{'state'}($request);
-    }
 
     /**
      * Add message to the screen
@@ -55,6 +45,17 @@ abstract class Screen
      * @return mixed
      */
     abstract protected function execute();
+
+    /**
+     * Create an instance of a screen
+     *
+     * @param Request $request
+     * @return Screen
+     */
+    private static function getInstance(Request $request): Screen
+    {
+        return new $request->trail->{'state'}($request);
+    }
 
     /**
      * Retrieve payload passed to the session
@@ -101,6 +102,22 @@ abstract class Screen
     }
 
     /**
+     * Retrieve the value passed with the USSD response
+     *
+     * @return string
+     */
+    protected function getRequestValue(): string
+    {
+        if (count($this->options())) return $this->getItemAt($this->request->message);
+        return $this->request->message;
+    }
+
+    protected function goesBack(): bool
+    {
+        return true;
+    }
+
+    /**
      * Render the USSD response
      *
      * @return string
@@ -121,26 +138,11 @@ abstract class Screen
      * Handle USSD request
      *
      * @param Request $request
+     * @return mixed
      */
     public static function handle(Request $request)
     {
         $screen = static::getInstance($request);
-        $screen->execute();
-    }
-
-    /**
-     * Retrieve the value passed with the USSD response
-     *
-     * @return string
-     */
-    public function getRequestValue(): string
-    {
-        if (count($this->options())) return $this->getItemAt($this->request->message);
-        return $this->request->message;
-    }
-
-    protected function goesBack(): bool
-    {
-        return true;
+        return $screen->execute();
     }
 }
