@@ -17,6 +17,7 @@ class CreateSessionsTable extends Migration
             $table->bigIncrements('id');
             $table->string('session_id');
             $table->string('state');
+            $table->string('payload')->nullable();
             $table->string('locale')->nullable();
             $table->string('msisdn');
             $table->timestamps();

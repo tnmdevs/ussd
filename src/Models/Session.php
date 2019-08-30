@@ -21,4 +21,15 @@ class Session extends Model
             'msisdn' => $msisdn
         ]);
     }
+
+    public function mark(string $state)
+    {
+        $this->update(['state' => $state]);
+        return $this;
+    }
+
+    public function addPayload(string $payload)
+    {
+        $this->update(['payload' => $payload]);
+    }
 }

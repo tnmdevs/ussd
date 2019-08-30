@@ -64,5 +64,4 @@ class Request extends BaseRequest
             ['state' => 'init', 'msisdn' => $this->msisdn]
         );
     }
-
 }
