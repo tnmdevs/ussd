@@ -52,10 +52,9 @@ abstract class Screen
     /**
      * Execute the selected option/action
      *
-     * @param string $message
      * @return mixed
      */
-    abstract protected function execute(string $message);
+    abstract protected function execute();
 
     /**
      * Retrieve payload passed to the session
@@ -126,7 +125,7 @@ abstract class Screen
     public static function handle(Request $request)
     {
         $screen = static::getInstance($request);
-        $screen->execute($screen->getItemAt($request->message));
+        $screen->execute();
     }
 
     /**
