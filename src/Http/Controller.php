@@ -15,7 +15,9 @@ class Controller extends BaseController
      */
     public function __invoke(Request $request)
     {
-        if ($request->isInitial()) return (new Welcome($request))->render();
+        if ($request->isInitial() || $request->message == '0') return (new Welcome($request))->render();
+
+        if ($request->message == '#') return $request->getPreviousScreen()->render();
 
         return Screen::handle($request);
     }

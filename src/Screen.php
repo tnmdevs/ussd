@@ -39,6 +39,7 @@ abstract class Screen
      */
     abstract protected function options(): array;
 
+    abstract public function previous(): Screen;
     /**
      * Execute the selected option/action
      *
@@ -108,7 +109,9 @@ abstract class Screen
      */
     protected function getRequestValue(): string
     {
-        if (count($this->options())) return $this->getItemAt($this->request->message);
+        if (count($this->options()) && count($this->options()) >= $this->request->message) {
+            return $this->getItemAt($this->request->message);
+        }
         return $this->request->message;
     }
 
@@ -144,5 +147,11 @@ abstract class Screen
     {
         $screen = static::getInstance($request);
         return $screen->execute();
+    }
+
+    public function outOfRange(): bool
+    {
+        if ($this->getRequestValue() == '#' || $this->getRequestValue() == '0') return false;
+        return count($this->options()) && $this->getRequestValue() > count($this->options());
     }
 }

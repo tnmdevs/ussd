@@ -34,13 +34,4 @@ class UssdServiceProvider extends ServiceProvider
             ]);
         }
     }
-
-    private function registerScreenCommand()
-    {
-        $this->app->singleton('command.tnmdev.generate', function ($app) {
-            return $app['TNM\USSD\Commands\MakeScreen'];
-        });
-        $this->commands('command.tnmdev.generate');
-    }
-
 }

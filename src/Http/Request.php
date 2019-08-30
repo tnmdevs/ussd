@@ -5,6 +5,7 @@ namespace TNM\USSD\Http;
 
 use \Illuminate\Http\Request as BaseRequest;
 use TNM\USSD\Models\Session;
+use TNM\USSD\Screen;
 
 class Request extends BaseRequest
 {
@@ -63,5 +64,15 @@ class Request extends BaseRequest
             ['session_id' => $this->session],
             ['state' => 'init', 'msisdn' => $this->msisdn]
         );
+    }
+
+    public function getScreen(): Screen
+    {
+        return new $this->trail->{'state'}($this);
+    }
+
+    public function getPreviousScreen(): Screen
+    {
+        return $this->getScreen()->previous();
     }
 }

@@ -11,7 +11,7 @@ class MakeScreen extends Command
      *
      * @var string
      */
-    protected $signature = 'make:screen {name}';
+    protected $signature = 'ussd:make {name}';
 
     /**
      * The console command description.

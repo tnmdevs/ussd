@@ -16,7 +16,7 @@ class {{class}} extends Screen
      */
     protected function message(): string
     {
-        // TODO: Implement message() method.
+        return "To be replaced with your custom message"
     }
 
     /**
@@ -25,7 +25,18 @@ class {{class}} extends Screen
      */
     protected function options(): array
     {
-        // TODO: Implement options() method.
+        return [
+            // To be replaced with an array of your options
+        ];
+    }
+
+    /**
+    * Previous screen
+    * return Screen $screen
+    */
+    public function previous(): Screen
+    {
+        return new Welcome($this->request);
     }
 
     /**
