@@ -1,5 +1,5 @@
 <?php
 
 Route::group(['namespace' => 'TNM\USSD\Http', 'prefix' => 'ussd'], function () {
-    Route::post('ussd', ['uses' => 'Controller']);
+    Route::post('/', ['uses' => 'Controller']);
 });
