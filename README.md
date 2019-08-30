@@ -19,7 +19,7 @@ USSD adapter decodes xml requests to `request` object that extends `\Illuminate\
 
 To use it pass the TNM USSD Request to your controller methods.
 
-```$xslt
+```php
 use \TNM\USSD\Http\Request
 
 class UssdController extends Controller
