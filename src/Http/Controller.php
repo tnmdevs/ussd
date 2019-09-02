@@ -19,6 +19,8 @@ class Controller extends BaseController
 
         if ($request->message == '#') return $request->getPreviousScreen()->render();
 
+        if ($request->getScreen()->outOfRange()) return $request->getScreen()->render();
+
         return Screen::handle($request);
     }
 

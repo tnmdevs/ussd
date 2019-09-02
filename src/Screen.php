@@ -6,6 +6,7 @@ namespace TNM\USSD;
 
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
+use TNM\USSD\Screens\Welcome;
 
 abstract class Screen
 {
@@ -55,6 +56,7 @@ abstract class Screen
      */
     private static function getInstance(Request $request): Screen
     {
+        if (!$request->trail->{'state'}) return new Welcome($request);
         return new $request->trail->{'state'}($request);
     }
 
@@ -132,7 +134,7 @@ abstract class Screen
             sprintf("%s\n%s %s",
                 $this->message(),
                 $this->optionsAsString(),
-                $this->goesBack() ? "\n0. Home \n#. Back": ""
+                $this->goesBack() ? "0. Home \n#. Back": ""
             ), $this->type()
         );
     }
