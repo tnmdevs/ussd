@@ -62,7 +62,7 @@ class Request extends BaseRequest
     {
         return Session::firstOrCreate(
             ['session_id' => $this->session],
-            ['state' => null, 'msisdn' => $this->msisdn]
+            ['state' => 'init', 'msisdn' => $this->msisdn]
         );
     }
 
