@@ -3,8 +3,7 @@
 
 namespace TNM\USSD\Http;
 
-use App\Screens\Welcome;
-use \Illuminate\Http\Request as BaseRequest;
+use Illuminate\Http\Request as BaseRequest;
 use TNM\USSD\Models\Session;
 use TNM\USSD\Screen;
 
