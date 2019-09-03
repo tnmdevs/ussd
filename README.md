@@ -25,7 +25,7 @@ Once you install the package, the USSD app will be accessible on `/api/ussd` end
 ```php
 php artisan ussd:make <name>
 ```
-This will create a boilerplate USSD screen object for you. You can go ahead and edit the contents of `message`, `options` and `execute` methods. The screen extends `TNM\USSD\Screen` class which gives you access to means of accessing the request details, and encoding USSD response.
+This will create a boilerplate USSD screen object for you. You can go ahead and edit the contents of `message`, `options` and `execute` methods. The screen extends `TNM\USSD\Screen` class which gives you means of accessing the request details, and encoding USSD response.
 
 ### 2. The `Request` object
 
@@ -116,24 +116,13 @@ class ConfirmSubscription extends Screen
         
         $service = new SubscriptionService();
         $service->subscribe($this->payload(), $this->request->msisdn);
+
         return (new Subscribed($this->request))->render();
     }
     
     public function previous(): Screen
     {
         return new Subscribe($this->request);
-    }
-    
-    // should render a release screen
-    public function type(): int
-    {
-        return Response::RELEASE;
-    }
-    
-    // should not show back routing option
-    public function goesBack(): bool
-    {
-        return false;
     }
 }
 ```
