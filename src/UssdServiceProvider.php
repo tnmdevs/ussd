@@ -4,8 +4,8 @@ namespace TNM\USSD;
 
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
-use TNM\USSD\Commands\InstallCommand;
-use TNM\USSD\Commands\MakeScreen;
+use TNM\USSD\Commands\Install;
+use TNM\USSD\Commands\UssdMake;
 
 class UssdServiceProvider extends ServiceProvider
 {
@@ -29,8 +29,8 @@ class UssdServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                MakeScreen::class,
-                InstallCommand::class,
+                UssdMake::class,
+                Install::class,
             ]);
         }
     }

@@ -131,7 +131,7 @@ abstract class Screen
     {
         $this->request->trail->update(['state' => static::class]);
         return response()->ussd(
-            sprintf("%s\n%s %s",
+            sprintf("%s\n%s%s",
                 $this->message(),
                 $this->optionsAsString(),
                 $this->goesBack() ? "0. Home \n#. Back": ""

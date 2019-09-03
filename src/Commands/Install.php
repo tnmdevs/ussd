@@ -5,7 +5,7 @@ namespace TNM\USSD\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
-class InstallCommand extends Command
+class Install extends Command
 {
     /**
      * The name and signature of the console command.
@@ -38,7 +38,7 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        Artisan::call('make:screen Welcome');
+        Artisan::call('ussd:make Welcome');
         $this->info('USSD application installed successfully');
     }
 }

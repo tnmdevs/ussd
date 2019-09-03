@@ -6,8 +6,16 @@ namespace App\Screens;
 
 use TNM\USSD\Screen;
 
-class {{class}} extends Screen
+class Error extends Screen
 {
+    private $message;
+    /**
+     * @param $message
+     */
+    public function setMessage(string $message)
+    {
+        $this->message = $message;
+    }
 
     /**
      * Add message to the screen
@@ -16,7 +24,7 @@ class {{class}} extends Screen
      */
     protected function message(): string
     {
-        return "To be replaced with your custom message";
+        return $this->message;
     }
 
     /**
@@ -48,9 +56,4 @@ class {{class}} extends Screen
     {
         // TODO: Implement execute() method.
     }
-
-     public function previous(): Screen
-     {
-        // TODO: Implement previous() method.
-     }
 }

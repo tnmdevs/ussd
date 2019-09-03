@@ -37,4 +37,9 @@ class Welcome extends Screen
     {
         // TODO: Implement execute() method.
     }
+
+    public function previous(): Screen
+    {
+        // TODO: Implement previous() method.
+    }
 }

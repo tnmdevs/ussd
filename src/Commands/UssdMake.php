@@ -4,7 +4,7 @@ namespace TNM\USSD\Commands;
 
 use Illuminate\Console\Command;
 
-class MakeScreen extends Command
+class UssdMake extends Command
 {
     /**
      * The name and signature of the console command.
