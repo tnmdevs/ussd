@@ -121,7 +121,7 @@ class ConfirmSubscription extends Screen
             $service->subscribe($this->payload(), $this->request->msisdn);
             return (new Subscribed($this->request))->render();
         } catch (\Exception $exception) {
-            throw new UssdException("Subscription failed. Please try again later");
+            throw new UssdException($this->request, "Subscription failed. Please try again later");
         }
     }
     
