@@ -59,7 +59,6 @@ You can extend the following methods to change some properties of the screen.
 
 namespace App\Screens;
 
-use TNM\USSD\Exceptions\UssdException;
 use TNM\USSD\Screen;
 use App\Models\Service;
 
@@ -98,6 +97,7 @@ namespace App\Screens;
 
 use TNM\USSD\Screen;
 use TNM\USSD\Http\Response;
+use TNM\USSD\Exceptions\UssdException;
 
 class ConfirmSubscription extends Screen
 {
