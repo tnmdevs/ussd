@@ -55,12 +55,14 @@ You can extend the following methods to change some properties of the screen.
 ### Example Screen Implementation
 
 ```php
+// app/Screens/Subscribe.php
+
 namespace App\Screens;
 
 use TNM\USSD\Screen;
 use App\Models\Service;
 
-class Register extends Screen
+class Subscribe extends Screen
 {
     public function message(): string
     {
@@ -84,6 +86,36 @@ class Register extends Screen
     public function previous(): Screen
     {
         return new Welcome($this->request);
+    }
+}
+```
+
+```php
+// app/Screens/ConfirmSubscription.php
+
+namespace App\Screens;
+
+use TNM\USSD\Screen;
+
+class ConfirmSubscription extends Screen
+{
+    public function message(): string
+    {
+        return sprintf("Please confirm subscription to %s", $this->payload());
+    }
+
+    public function options(): array
+    {
+        return ['Confirm', 'Cancel'];
+    }
+
+    public function execute()
+    {
+        if ($this->getRequestValue() === 'Cancel') return $this->previous()->render();
+        
+        $service = new SubscriptionService();
+        $service->subscribe($this->payload(), $this->request->msisdn);
+        return (new Subscribed($this->request))->render();
     }
 }
 ```
