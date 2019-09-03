@@ -16,7 +16,7 @@ php artisan migrate
 ```php
 php artisan ussd:install
 ```
-Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint.
+Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint. A landing screen will be created for you at `App\Screens\Welcome.php`. 
 
 ## Usage
 
