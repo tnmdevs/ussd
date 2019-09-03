@@ -59,6 +59,7 @@ You can extend the following methods to change some properties of the screen.
 
 namespace App\Screens;
 
+use TNM\USSD\Exceptions\UssdException;
 use TNM\USSD\Screen;
 use App\Models\Service;
 
@@ -115,9 +116,13 @@ class ConfirmSubscription extends Screen
         if ($this->getRequestValue() === 'Cancel') return $this->previous()->render();
         
         $service = new SubscriptionService();
-        $service->subscribe($this->payload(), $this->request->msisdn);
 
-        return (new Subscribed($this->request))->render();
+        try {
+            $service->subscribe($this->payload(), $this->request->msisdn);
+            return (new Subscribed($this->request))->render();
+        } catch (\Exception $exception) {
+            throw new UssdException("Subscription failed. Please try again later");
+        }
     }
     
     public function previous(): Screen
