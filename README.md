@@ -96,6 +96,7 @@ class Subscribe extends Screen
 namespace App\Screens;
 
 use TNM\USSD\Screen;
+use TNM\USSD\Http\Response;
 
 class ConfirmSubscription extends Screen
 {
@@ -116,6 +117,23 @@ class ConfirmSubscription extends Screen
         $service = new SubscriptionService();
         $service->subscribe($this->payload(), $this->request->msisdn);
         return (new Subscribed($this->request))->render();
+    }
+    
+    public function previous(): Screen
+    {
+        return new Subscribe($this->request);
+    }
+    
+    // should render a release screen
+    public function type(): int
+    {
+        return Response::RELEASE;
+    }
+    
+    // should not show back routing option
+    public function goesBack(): bool
+    {
+        return false;
     }
 }
 ```
