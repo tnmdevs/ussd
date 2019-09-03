@@ -1,6 +1,8 @@
 # TNM TruRoute USSD Adapter
 
-This package creates adapters for Laravel to send responses to TruRoute USSD Client and decode its USSD requests using built-in Laravel Illuminate Facades.
+This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. 
+
+* Disclaimer: There is no guarantee that this adapter will work with any other USSD interface unless it exposes the same interface as the one we developed for.
 
 ## Installation
 ```php
