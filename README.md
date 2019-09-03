@@ -3,13 +3,13 @@
 This package creates adapters for Laravel to send responses to TruRoute USSD Client and decode its USSD requests using built-in Laravel Illuminate Facades.
 
 ## Installation
-```
+```php
 composer require tnmdev/ussd
 ```
 
 
 Then run the migrations to create session tracking tables
-```
+```php
 php artisan migrate
 ```
 
@@ -51,6 +51,10 @@ The `Screen` class will require you to implement the following methods.
 You can extend the following methods to change some properties of the screen.
 * `type()` should return an integer delegated to constants `RELEASE` and `RESPONSE` of the `TNM\USSD\Response` class. It defaults to `RESPONSE` if not overridden.
 * `goesBack()` return a boolean value defining if the screen should have a `back` navigation option. You can leave it alone unless you are defining the landing screen.
+
+
+### 5. Exception Handling
+The USSD adapter has a self-rendering exception handler. To throw an exception, throw new `TNM\USSD\Exceptions\UssdException`. It takes two params: the `request` object and the message you want to pass to the user.
 
 ### Example Screen Implementation
 
@@ -118,8 +122,10 @@ class ConfirmSubscription extends Screen
         $service = new SubscriptionService();
 
         try {
+        
             $service->subscribe($this->payload(), $this->request->msisdn);
             return (new Subscribed($this->request))->render();
+            
         } catch (\Exception $exception) {
             throw new UssdException($this->request, "Subscription failed. Please try again later");
         }
