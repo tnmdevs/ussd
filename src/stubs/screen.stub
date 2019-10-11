@@ -25,9 +25,8 @@ class {{class}} extends Screen
      */
     protected function options(): array
     {
-        return [
-            // To be replaced with an array of your options
-        ];
+        // To be replaced with an array of your options
+        return [];
     }
 
     /**
