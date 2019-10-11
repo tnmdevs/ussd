@@ -62,11 +62,12 @@ abstract class Screen
 
     /**
      * Retrieve payload passed to the session
+     * @param string $key
      * @return string
      */
-    protected function payload(): string
+    protected function payload(string $key): string
     {
-        return $this->request->trail->{'payload'};
+        return $this->request->trail->getPayload($key);
     }
 
     /**

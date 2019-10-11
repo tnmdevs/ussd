@@ -28,8 +28,21 @@ class Session extends Model
         return $this;
     }
 
-    public function addPayload(string $payload)
+    public function addPayload(string $key, string $value)
     {
-        $this->update(['payload' => $payload]);
+        if (!empty($this->{'payload'})) $payload = json_decode($this->{'payload'}, true);
+        $payload[$key] = $value;
+        $this->update(['payload' => json_encode($payload)]);
+    }
+
+    public function getPayload(string $key)
+    {
+        $payload = $this->{'payload'};
+        if (empty($payload)) return null;
+
+        $arr = json_decode($payload, true);
+        if (array_key_exists($key)) return $arr[$key];
+
+        return null;
     }
 }
