@@ -70,6 +70,15 @@ abstract class Screen
     }
 
     /**
+     * Check if the screen has payload
+     * @return bool
+     */
+    public function hasPayload(): bool
+    {
+        return $this->payload() && $this->payload() != '';
+    }
+
+    /**
      * Response type: Release or Response
      *
      * @return int
