@@ -38,7 +38,7 @@ class Install extends Command
      */
     public function handle()
     {
-        Artisan::call('ussd:make Welcome');
+        Artisan::call('make:ussd Welcome');
         $this->info('USSD application installed successfully');
     }
 }

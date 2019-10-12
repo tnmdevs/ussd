@@ -4,14 +4,14 @@ namespace TNM\USSD\Commands;
 
 use Illuminate\Console\Command;
 
-class UssdMake extends Command
+class MakeUssd extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ussd:make {name}';
+    protected $signature = 'make:ussd {name}';
 
     /**
      * The console command description.
