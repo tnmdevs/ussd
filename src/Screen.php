@@ -40,6 +40,10 @@ abstract class Screen
      */
     abstract protected function options(): array;
 
+    /**
+     * The screen to go to when BACK option is chosen
+     * @return Screen
+     */
     abstract public function previous(): Screen;
     /**
      * Execute the selected option/action
@@ -72,11 +76,12 @@ abstract class Screen
 
     /**
      * Check if the screen has payload
+     * @param string $key
      * @return bool
      */
-    public function hasPayload(): bool
+    public function hasPayload(string $key): bool
     {
-        return $this->payload() && $this->payload() != '';
+        return !empty($this->payload($key));
     }
 
     /**
@@ -97,6 +102,7 @@ abstract class Screen
      */
     public function getItemAt(int $value): string
     {
+        if (!array_key_exists($value -1, $this->options())) return null;
         return $this->options()[$value - 1];
     }
 
@@ -121,15 +127,14 @@ abstract class Screen
      */
     protected function getRequestValue(): string
     {
-        if (count($this->options()) && count($this->options()) >= $this->request->message) {
-            return $this->getItemAt($this->request->message);
-        }
+        if ($this->withinRange()) return $this->getItemAt($this->request->message);
+
         return $this->request->message;
     }
 
     protected function goesBack(): bool
     {
-        return true;
+        return $this->type() === Response::RESPONSE;
     }
 
     /**
@@ -157,13 +162,17 @@ abstract class Screen
      */
     public static function handle(Request $request)
     {
-        $screen = static::getInstance($request);
-        return $screen->execute();
+        return (static::getInstance($request))->execute();
     }
 
     public function outOfRange(): bool
     {
         if ($this->getRequestValue() == '#' || $this->getRequestValue() == '0') return false;
         return count($this->options()) && $this->getRequestValue() > count($this->options());
+    }
+
+    public function withinRange(): bool
+    {
+        return !$this->outOfRange();
     }
 }
