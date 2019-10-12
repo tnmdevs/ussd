@@ -1,21 +1,22 @@
 <?php
 
 
-namespace App\Screens;
+namespace TNM\USSD\Screens;
 
 
+use TNM\USSD\Http\Request;
+use TNM\USSD\Http\Response;
 use TNM\USSD\Screen;
 
 class Error extends Screen
 {
-    private $message;
-    /**
-     * @param $message
-     */
-    public function setMessage(string $message)
+    public function __construct(Request $request, string $message = '')
     {
+        parent::__construct($request);
         $this->message = $message;
     }
+
+    private $message;
 
     /**
      * Add message to the screen
@@ -33,9 +34,7 @@ class Error extends Screen
      */
     protected function options(): array
     {
-        return [
-            // To be replaced with an array of your options
-        ];
+        return [];
     }
 
     /**
@@ -55,5 +54,10 @@ class Error extends Screen
     protected function execute()
     {
         // TODO: Implement execute() method.
+    }
+
+    public function type(): int
+    {
+        return Response::RELEASE;
     }
 }
