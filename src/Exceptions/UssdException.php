@@ -4,8 +4,8 @@
 namespace TNM\USSD\Exceptions;
 
 
-use App\Screens\Error;
 use TNM\USSD\Http\Request;
+use TNM\USSD\Screens\Error;
 
 class UssdException extends \Exception
 {
@@ -22,8 +22,6 @@ class UssdException extends \Exception
 
     public function render()
     {
-        $error = new Error($this->request);
-        $error->setMessage($this->getMessage());
-        return $error->render();
+        return (new Error($this->request, $this->getMessage()))->render();
     }
 }
