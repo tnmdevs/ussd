@@ -25,7 +25,7 @@ Once you install the package, the USSD app will be accessible on `/api/ussd` end
 ### 1.  Creating USSD Screens
 
 ```php
-php artisan ussd:make <name>
+php artisan make:ussd <name>
 ```
 This will create a boilerplate USSD screen object for you. You can go ahead and edit the contents of `message`, `options` and `execute` methods. The screen extends `TNM\USSD\Screen` class which gives you means of accessing the request details, and encoding USSD response.
 
@@ -43,19 +43,34 @@ The request class exposes four properties from the xml request passed on by USSD
 | msisdn | The number making the USSD request |
 
 The USSD screen that is sent to the user is represented by `Screens` which extend the `TNM\USSD\Screen` class. 
-### 3. The Mandatory Methods
+
+### 3. Request Payload
+
+You can move payload from between screens using request payload. Any piece of data added to a request payload can be accessed by other request within the session.
+
+#### Setting request payload
+Request payload can be added by calling `addPayload` method on request's trail object. It takes a key-value pair of parameters. 
+```php
+$this->request->trail->addPayload('phone', $this->getRequestValue())
+```
+#### Retrieving request payload
+```php
+$this->request->trail->payload('phone')
+```
+
+### 4. The Mandatory Methods
 The `Screen` class will require you to implement the following methods.
 * `message()` must return a string message that will be displayed on the screen.
 * `options()` must return an array of options which will be exposed to the user. Return an empty array for screens that require no options.
 * `execute()` this should be used to implement whatever the app should do with request data. The request data is returned by `getRequestValue()` within the screen object. You may use that to access the request data. If you want to redirect the user to another screen, return the `render()` method of the target screen: `return (new Register($this->request))->render()`. The Screen initialization takes one argument, the `request` object.
 * `previous()` this should return an object of the `Screen` class. It tells the session where to navigate to when the user chooses the back option.
-### 4. Optional Methods
+### 5. Optional Methods
 You can extend the following methods to change some properties of the screen.
 * `type()` should return an integer delegated to constants `RELEASE` and `RESPONSE` of the `TNM\USSD\Response` class. It defaults to `RESPONSE` if not overridden.
 * `goesBack()` return a boolean value defining if the screen should have a `back` navigation option. You can leave it alone unless you are defining the landing screen.
 
 
-### 5. Exception Handling
+### 6. Exception Handling
 The USSD adapter has a self-rendering exception handler. To throw an exception, throw new `TNM\USSD\Exceptions\UssdException`. It takes two params: the `request` object and the message you want to pass to the user.
 
 ### Example Screen Implementation

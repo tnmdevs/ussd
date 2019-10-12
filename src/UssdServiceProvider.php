@@ -5,7 +5,7 @@ namespace TNM\USSD;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use TNM\USSD\Commands\Install;
-use TNM\USSD\Commands\UssdMake;
+use TNM\USSD\Commands\MakeUssd;
 
 class UssdServiceProvider extends ServiceProvider
 {
@@ -29,7 +29,7 @@ class UssdServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                UssdMake::class,
+                MakeUssd::class,
                 Install::class,
             ]);
         }
