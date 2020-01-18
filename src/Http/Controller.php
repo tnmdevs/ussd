@@ -15,6 +15,11 @@ class Controller extends BaseController
      */
     public function __invoke(Request $request)
     {
+        if (! $request->isValid()) {
+            return response('Request is not a valid XML document.', 400)
+                  ->header('Content-Type', 'text/plain');
+        }
+
         if ($request->isInitial() || $request->message == '0') return (new Welcome($request))->render();
 
         if ($request->message == '#') return $request->getPreviousScreen()->render();

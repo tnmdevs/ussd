@@ -22,22 +22,53 @@ class Request extends BaseRequest
      */
     public $trail;
 
+    /**
+     * @var bool $valid whether the request is valid XML document or not
+     */
+    private $valid = false;
+
     public function __construct()
     {
         parent::__construct();
         $this->setProperties(request()->getContent());
+        
+        if (! $this->valid) // Prevent database errors etc..
+            return;
+        
         $this->setSessionLocale();
         $this->trail = $this->getTrail();
+    }
+
+    public function isValid(): bool
+    {
+        return $this->valid;
+    }
+
+    private function setValid($request): void
+    {
+        if (! $request) {
+            $this->valid = false;
+            return;
+        }
+
+        $this->valid = array_key_exists('msisdn', $request) &&
+                        array_key_exists('sessionid', $request) &&
+                        array_key_exists('type', $request) &&
+                        array_key_exists('msg', $request);
     }
 
     private function setProperties(string $params): void
     {
         $request = json_decode(json_encode(simplexml_load_string($params)), true);
 
-        $this->msisdn = $request["msisdn"];
-        $this->session = $request["sessionid"];
-        $this->type = $request["type"];
-        $this->message = $request["msg"];
+        $this->setValid($request);
+
+        if ($this->valid) {
+            $this->msisdn = $request["msisdn"];
+            $this->session = $request["sessionid"];
+            $this->type = $request["type"];
+            $this->message = $request["msg"];
+        }
     }
 
     private function setSessionLocale(): void
