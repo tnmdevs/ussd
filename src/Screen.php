@@ -58,7 +58,7 @@ abstract class Screen
      * @param Request $request
      * @return Screen
      */
-    private static function getInstance(Request $request): Screen
+    public static function getInstance(Request $request): Screen
     {
         if (!$request->trail->{'state'}) return new Welcome($request);
         return new $request->trail->{'state'}($request);
@@ -167,12 +167,19 @@ abstract class Screen
 
     public function outOfRange(): bool
     {
-        if ($this->getRequestValue() == '#' || $this->getRequestValue() == '0') return false;
-        return count($this->options()) && $this->getRequestValue() > count($this->options());
+        return !$this->withinRange();
+    }
+
+    public function doesntHaveOptions(): bool
+    {
+        return empty($this->options());
     }
 
     public function withinRange(): bool
     {
-        return !$this->outOfRange();
+        if ($this->doesntHaveOptions()) return true;
+        if ($this->request->message == '#' || $this->request->message == '0') return true;
+        if (!is_numeric($this->request->message)) return false;
+        return $this->request->message <= count($this->options());
     }
 }

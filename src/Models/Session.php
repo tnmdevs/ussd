@@ -41,7 +41,7 @@ class Session extends Model
         if (empty($payload)) return null;
 
         $arr = json_decode($payload, true);
-        if (array_key_exists($key)) return $arr[$key];
+        if (array_key_exists($key, $arr)) return $arr[$key];
 
         return null;
     }
