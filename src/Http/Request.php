@@ -30,6 +30,16 @@ class Request extends BaseRequest
         $this->trail = $this->getTrail();
     }
 
+    public function toPreviousScreen(): bool
+    {
+        return $this->message == Screen::PREVIOUS;
+    }
+
+    public function toHomeScreen(): bool
+    {
+        return $this->isInitial() || $this->message == Screen::HOME;
+    }
+
     private function setProperties(string $params): void
     {
         $request = json_decode(json_encode(simplexml_load_string($params)), true);
