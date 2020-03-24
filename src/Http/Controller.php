@@ -15,9 +15,9 @@ class Controller extends BaseController
      */
     public function __invoke(Request $request)
     {
-        if ($request->isInitial() || $request->message == '0') return (new Welcome($request))->render();
+        if ($request->toHomeScreen()) return (new Welcome($request))->render();
 
-        if ($request->message == '#') return $request->getPreviousScreen()->render();
+        if ($request->toPreviousScreen()) return $request->getPreviousScreen()->render();
 
         if ($request->getScreen()->outOfRange()) return $request->getScreen()->render();
 
