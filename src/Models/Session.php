@@ -28,7 +28,7 @@ class Session extends Model
         return $this;
     }
 
-    public function addPayload(string $key, string $value)
+    public function addPayload(string $key, $value)
     {
         if (!empty($this->{'payload'})) $payload = json_decode($this->{'payload'}, true);
         $payload[$key] = $value;
