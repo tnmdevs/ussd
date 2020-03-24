@@ -10,6 +10,8 @@ use TNM\USSD\Screens\Welcome;
 
 abstract class Screen
 {
+    const PREVIOUS = '#';
+    const HOME = '0';
     /**
      * USSD Request object
      *
@@ -75,6 +77,16 @@ abstract class Screen
     }
 
     /**
+     * Add payload to the session
+     * @param string $key
+     * @param $value
+     */
+    public function addPayload(string $key, $value)
+    {
+        return $this->request->trail->addPayload($key, $value);
+    }
+
+    /**
      * Check if the screen has payload
      * @param string $key
      * @return bool
@@ -91,7 +103,12 @@ abstract class Screen
      */
     protected function type(): int
     {
-        return Response::RESPONSE;
+        return $this->acceptsResponse() ? Response::RESPONSE : Response::RELEASE;
+    }
+
+    protected function acceptsResponse(): bool
+    {
+        return true;
     }
 
     /**
@@ -149,8 +166,9 @@ abstract class Screen
             sprintf("%s\n%s%s",
                 $this->message(),
                 $this->optionsAsString(),
-                $this->goesBack() ? "0. Home \n#. Back": ""
-            ), $this->type()
+                $this->goesBack() ? sprintf("%s. Home \n%s. Back", Screen::HOME, Screen::PREVIOUS) : ""
+            ),
+            $this->type()
         );
     }
 
@@ -165,21 +183,25 @@ abstract class Screen
         return (static::getInstance($request))->execute();
     }
 
-    public function outOfRange(): bool
-    {
-        return !$this->withinRange();
-    }
-
     public function doesntHaveOptions(): bool
     {
         return empty($this->options());
     }
 
+    public function outOfRange(): bool
+    {
+        return !$this->withinRange();
+    }
+
     public function withinRange(): bool
     {
-        if ($this->doesntHaveOptions()) return true;
-        if ($this->request->message == '#' || $this->request->message == '0') return true;
+        if ($this->inOptions($this->request->message) || $this->doesntHaveOptions()) return true;
         if (!is_numeric($this->request->message)) return false;
-        return $this->request->message <= count($this->options());
+        return $this->request->message == '#' || $this->request->message == '0';
+    }
+
+    public function inOptions(string $value): bool
+    {
+        return array_key_exists($value -1, $this->options());
     }
 }
