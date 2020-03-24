@@ -56,8 +56,8 @@ class Error extends Screen
         // TODO: Implement execute() method.
     }
 
-    public function type(): int
+    public function acceptsResponse(): bool
     {
-        return Response::RELEASE;
+        return false;
     }
 }
