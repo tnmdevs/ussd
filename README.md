@@ -5,17 +5,14 @@ This package creates an adapter, boilerplate code and functionality that lets yo
 * Disclaimer: There is no guarantee that this adapter will work with any other USSD interface unless it exposes the same interface as the one we developed for.
 
 ## Installation
-```php
+```
 composer require tnmdev/ussd
 ```
 
 
-Then run the migrations to create session tracking tables
-```php
-php artisan migrate
-```
+Then install the ussd scaffold. This will also run migrations to create session tracking tables
 
-```php
+```
 php artisan ussd:install
 ```
 Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint. A landing screen will be created for you at `App\Screens\Welcome.php`. 
@@ -24,7 +21,7 @@ Once you install the package, the USSD app will be accessible on `/api/ussd` end
 
 ### 1.  Creating USSD Screens
 
-```php
+```
 php artisan make:ussd <name>
 ```
 This will create a boilerplate USSD screen object for you. You can go ahead and edit the contents of `message`, `options` and `execute` methods. The screen extends `TNM\USSD\Screen` class which gives you means of accessing the request details, and encoding USSD response.
@@ -51,11 +48,19 @@ You can move payload from between screens using request payload. Any piece of da
 #### Setting request payload
 Request payload can be added by calling `addPayload` method on request's trail object. It takes a key-value pair of parameters. 
 ```php
-$this->request->trail->addPayload('phone', $this->getRequestValue())
+$this->request->trail->addPayload('phone', $this->getRequestValue());
+```
+This method is also delegated in the screen object as 
+```php
+$this->addPayload('key', 'value');
 ```
 #### Retrieving request payload
 ```php
-$this->request->trail->payload('phone')
+$this->request->trail->payload('phone');
+```
+This is also delegated as 
+```php
+$this->payload('key');
 ```
 
 ### 4. The Mandatory Methods
@@ -92,14 +97,14 @@ class Subscribe extends Screen
 
     public function options(): array
     {
-        return Service::all()->pluck('name');
+        return ['Service 1', 'Service 2', 'Service 3'];
     }
 
     public function execute()
     {
         // save the request value to session object 
-        // to access it in the next screen with $this->payload() 
-        $this->request->trail->addPayload($this->getRequestValue());
+        // to access it in the next screen with $this->payload($key) 
+        $this->addPayload('service', $this->getRequestValue());
 
         return (new ConfirmSubscription($this->request))->render();
     }
@@ -124,7 +129,7 @@ class ConfirmSubscription extends Screen
 {
     public function message(): string
     {
-        return sprintf("Please confirm subscription to %s", $this->payload());
+        return sprintf("Please confirm subscription to %s", $this->payload('service'));
     }
 
     public function options(): array
@@ -140,7 +145,7 @@ class ConfirmSubscription extends Screen
 
         try {
         
-            $service->subscribe($this->payload(), $this->request->msisdn);
+            $service->subscribe($this->payload('service'), $this->request->msisdn);
             return (new Subscribed($this->request))->render();
             
         } catch (\Exception $exception) {
