@@ -204,4 +204,9 @@ abstract class Screen
     {
         return array_key_exists($value -1, $this->options());
     }
+
+    public function value(): string
+    {
+        return $this->getRequestValue();
+    }
 }
