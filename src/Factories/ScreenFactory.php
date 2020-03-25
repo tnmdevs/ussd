@@ -12,11 +12,11 @@ abstract class ScreenFactory
     /**
      * @var Request
      */
-    private $request;
+    protected $request;
     /**
      * @var string
      */
-    private $value;
+    protected $value;
 
     public function __construct(Screen $screen)
     {
