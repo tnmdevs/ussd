@@ -142,7 +142,7 @@ abstract class Screen
      *
      * @return string
      */
-    protected function getRequestValue(): string
+    public function getRequestValue(): string
     {
         if ($this->withinRange()) return $this->getItemAt($this->request->message);
 
