@@ -32,8 +32,7 @@ class Request extends BaseRequest
         parent::__construct();
         $this->setProperties(request()->getContent());
 
-        if (!$this->valid) // Prevent database errors etc..
-            return;
+        if (!$this->valid) return;
 
         $this->setSessionLocale();
         $this->trail = $this->getTrail();
@@ -49,9 +48,9 @@ class Request extends BaseRequest
         return $this->isInitial() || $this->message == Screen::HOME;
     }
 
-    public function isValid(): bool
+    public function invalid(): bool
     {
-        return $this->valid;
+        return !$this->valid;
     }
 
     private function setValid($request): void
