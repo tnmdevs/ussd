@@ -78,6 +78,52 @@ You can extend the following methods to change some properties of the screen.
 ### 6. Exception Handling
 The USSD adapter has a self-rendering exception handler. To throw an exception, throw new `TNM\USSD\Exceptions\UssdException`. It takes two params: the `request` object and the message you want to pass to the user.
 
+### 7. Input Data Validation
+You can set rules to validate the user input by using `Validates` trait of the `TNM\USSD\Http` namespace.
+The trail will require you to implement `rules()` method, which should return a string of validation rules. 
+
+To validate input, call `$this->validate($this->request, $label)` in `execute()` method of your `Screen` class.
+
+If the input has a validation error, `ValidationException` of the `TNM\USSD\Exceptions` namespace will be thrown and an error screen will be rendered for you automatically.
+
+```php
+namespace App\Screens;
+
+use TNM\USSD\Screen;
+use TNM\USSD\Http\Validates;
+
+class EnterPhoneNumber extends Screen
+{
+    use Validates;
+
+    protected function message() : string
+    {
+        return 'Enter your phone number';
+    }
+    
+    protected function options() : array
+    {
+        return [];
+    }
+    
+    public function previous() : Screen
+    {
+        return new Welcome($this->request);
+    }
+
+    protected function execute()
+    {
+        $this->validate($this->request, 'phone');
+        // proceed with implementation
+    }
+
+    protected function rules() : string
+    {
+        return 'regex:/(088)[0-9]{7}/';
+    }
+}      
+```
+
 ### Example Screen Implementation
 
 ```php
