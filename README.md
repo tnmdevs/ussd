@@ -71,12 +71,12 @@ The `Screen` class will require you to implement the following methods.
 * `previous()` this should return an object of the `Screen` class. It tells the session where to navigate to when the user chooses the back option.
 ### 5. Optional Methods
 You can extend the following methods to change some properties of the screen.
-* `type()` should return an integer delegated to constants `RELEASE` and `RESPONSE` of the `TNM\USSD\Response` class. It defaults to `RESPONSE` if not overridden.
+* `type()` should return an integer delegated to constants `RELEASE` and `RESPONSE` of the `TNM\USSD\Response` class. It defaults to `RESPONSE` if not overridden. `RESPONSE` renders a screen with an input field, while `RELEASE` renders a screen without an input field, used to instruct the USSD Gateway to close the USSD session.
+* `acceptsResponse()`, instead of the complexity of `type()` method, you can call `acceptsResponse()`. It should return a boolean which instructs the screen whether to render an input field or to send a screen that marks the end of the USSD session.
 * `goesBack()` return a boolean value defining if the screen should have a `back` navigation option. You can leave it alone unless you are defining the landing screen.
 
-
 ### 6. Exception Handling
-The USSD adapter has a self-rendering exception handler. To throw an exception, throw new `TNM\USSD\Exceptions\UssdException`. It takes two params: the `request` object and the message you want to pass to the user.
+The USSD adapter has a self-rendering exception handler. To use it, `throw new UssdException` of the `TNM\USSD\Exceptions` namespace. It takes two params: the `request` object and the message you want to pass to the user. The exception handler renders a USSD screen with the error message and terminates the session.
 
 ### 7. Input Data Validation
 You can set rules to validate the user input by using `Validates` trait of the `TNM\USSD\Http` namespace.
@@ -132,7 +132,6 @@ class EnterPhoneNumber extends Screen
 namespace App\Screens;
 
 use TNM\USSD\Screen;
-use App\Models\Service;
 
 class Subscribe extends Screen
 {
@@ -168,7 +167,6 @@ class Subscribe extends Screen
 namespace App\Screens;
 
 use TNM\USSD\Screen;
-use TNM\USSD\Http\Response;
 use TNM\USSD\Exceptions\UssdException;
 
 class ConfirmSubscription extends Screen
