@@ -5,6 +5,7 @@ namespace TNM\USSD\Http;
 
 use App\Http\Controllers\Controller as BaseController;
 use App\Screens\Welcome;
+use TNM\USSD\Exceptions\UssdException;
 use TNM\USSD\Screen;
 
 class Controller extends BaseController
@@ -12,13 +13,12 @@ class Controller extends BaseController
     /**
      * @param Request $request
      * @return mixed|string
+     * @throws UssdException
      */
     public function __invoke(Request $request)
     {
-        if (! $request->isValid()) {
-            return response('Request is not a valid XML document.', 400)
-                ->header('Content-Type', 'text/plain');
-        }
+        if ($request->invalid())
+            throw new UssdException($request, 'The system could not process your request. Please try again later');
 
         if ($request->toHomeScreen()) return (new Welcome($request))->render();
 
