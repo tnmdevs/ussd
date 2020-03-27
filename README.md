@@ -1,8 +1,10 @@
 # TNM TruRoute USSD Adapter - Laravel 
 
-This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. 
+This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD 
+channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. 
 
-* Disclaimer: There is no guarantee that this adapter will work with any other USSD interface unless it exposes the same interface as the one we developed for.
+* Disclaimer: There is no guarantee that this adapter will work with any other USSD interface unless it exposes the 
+same interface as the one we developed for.
 
 ## Installation
 ```
@@ -15,18 +17,21 @@ Then install the ussd scaffold. This will also run migrations to create session 
 ```
 php artisan ussd:install
 ```
-Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint. A landing screen will be created for you at `App\Screens\Welcome.php`. 
+Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint. A landing screen will be created 
+for you at `App\Screens\Welcome.php`. 
 
 ## Usage
 
-### 1.  Creating USSD Screens
+### Creating USSD Screens
 
 ```
 php artisan make:ussd <name>
 ```
-This will create a boilerplate USSD screen object for you. You can go ahead and edit the contents of `message`, `options` and `execute` methods. The screen extends `TNM\USSD\Screen` class which gives you means of accessing the request details, and encoding USSD response.
+This will create a boilerplate USSD screen object for you. You can go ahead and edit the contents of `message`, 
+`options` and `execute` methods. The screen extends `TNM\USSD\Screen` class which gives you means of accessing the 
+request details, and encoding USSD response.
 
-### 2. The `Request` object
+### The `Request` object
 
 `Screen` has `$request` as a public property. This is an object of `TNM\USSD\Http\Request` class.
 
@@ -41,12 +46,14 @@ The request class exposes four properties from the xml request passed on by USSD
 
 The USSD screen that is sent to the user is represented by `Screens` which extend the `TNM\USSD\Screen` class. 
 
-### 3. Request Payload
+### Request Payload
 
-You can move payload from between screens using request payload. Any piece of data added to a request payload can be accessed by other request within the session.
+You can move payload from between screens using request payload. Any piece of data added to a request payload can be 
+accessed by other request within the session.
 
 #### Setting request payload
-Request payload can be added by calling `addPayload` method on request's trail object. It takes a key-value pair of parameters. 
+Request payload can be added by calling `addPayload` method on request's trail object. It takes a key-value pair of 
+parameters. 
 ```php
 $this->request->trail->addPayload('phone', $this->getRequestValue());
 ```
@@ -63,28 +70,83 @@ This is also delegated as
 $this->payload('key');
 ```
 
-### 4. The Mandatory Methods
+#### Using Arrays in Payload
+There are times where you have associative arrays for options. For example, you can have a list of products, 
+with `id`, `price`, `name` and `humanized`. Where name is what the product is referred to as in your system, and 
+`humanized` is how you want it to appear on the screen.
+
+An array of such items can be pushed to payload with a third boolean parameter. This tells the trail object to
+serialize the input before storing it. 
+```php
+$this->addPayload('products', $array, true);
+```  
+
+Manipulating array payloads is made possible by `HasBundledOptions` trait of `TNM\USSD\Traits` namespace. So to use
+arrays in your payload, you need to use `HasBundledOptions` trait in your `Screen`.
+
+Here are some of the uses of the bundled options trait: to list/map an associative array as USSD options, you can `map` 
+to the array key of your choice using the `map` method.
+```php
+public function options(): array 
+{
+    return $this->map('humanized', 'products');
+}
+```
+The `map` method takes two arguments. First is the array key you want to map with, and the second is the payload key you
+want to list from.
+
+When the user makes an option on the USSD screen, you can map back to any key of the associative array option made by 
+calling the `find` method.
+```php
+$this->addPayload('chosenProduct', $this->find('id', 'products'));
+```
+The implementation in the snippet above, will assign the `ID` of the chosen product to a payload key `chosenProduct`. 
+The trait looks for the user's option passed as the second argument. You can specify the field to look in by passing
+a third argument, which defaults to `humanized`. So the assumption is that your options associative array will have a
+field for displaying the content. You can rename it to anything that suits you. Just make sure you pass a third 
+argument to tell the method where to look. 
+
+In other cases you may just want to fetch the whole array on a particular payload key. The method is the same as a 
+normal payload, again with a second boolean argument.
+```php
+$this->payload('products', true);
+```
+
+### The Mandatory Methods
 The `Screen` class will require you to implement the following methods.
 * `message()` must return a string message that will be displayed on the screen.
-* `options()` must return an array of options which will be exposed to the user. Return an empty array for screens that require no options.
-* `execute()` this should be used to implement whatever the app should do with request data. The request data is returned by `getRequestValue()` within the screen object. You may use that to access the request data. If you want to redirect the user to another screen, return the `render()` method of the target screen: `return (new Register($this->request))->render()`. The Screen initialization takes one argument, the `request` object.
-* `previous()` this should return an object of the `Screen` class. It tells the session where to navigate to when the user chooses the back option.
-### 5. Optional Methods
+* `options()` must return an array of options which will be exposed to the user. Return an empty array for screens that 
+require no options.
+* `execute()` this should be used to implement whatever the app should do with request data. The request data is 
+returned by `getRequestValue()` within the screen object. You may use that to access the request data. If you want to 
+redirect the user to another screen, return the `render()` method of the target screen: 
+`return (new Register($this->request))->render()`. The Screen initialization takes one argument, the `request` object.
+* `previous()` this should return an object of the `Screen` class. It tells the session where to navigate to when the 
+user chooses the back option.
+### Optional Methods
 You can extend the following methods to change some properties of the screen.
-* `type()` should return an integer delegated to constants `RELEASE` and `RESPONSE` of the `TNM\USSD\Response` class. It defaults to `RESPONSE` if not overridden. `RESPONSE` renders a screen with an input field, while `RELEASE` renders a screen without an input field, used to instruct the USSD Gateway to close the USSD session.
-* `acceptsResponse()`, instead of the complexity of `type()` method, you can call `acceptsResponse()`. It should return a boolean which instructs the screen whether to render an input field or to send a screen that marks the end of the USSD session.
-* `goesBack()` return a boolean value defining if the screen should have a `back` navigation option. You can leave it alone unless you are defining the landing screen.
+* `type()` should return an integer delegated to constants `RELEASE` and `RESPONSE` of the `TNM\USSD\Response` class. 
+It defaults to `RESPONSE` if not overridden. `RESPONSE` renders a screen with an input field, while `RELEASE` renders a
+ screen without an input field, used to instruct the USSD Gateway to close the USSD session.
+* `acceptsResponse()`, instead of the complexity of `type()` method, you can call `acceptsResponse()`. It should return
+ a boolean which instructs the screen whether to render an input field or to send a screen that marks the end of the 
+ USSD session.
+* `goesBack()` return a boolean value defining if the screen should have a `back` navigation option. You can leave it 
+alone unless you are defining the landing screen.
 
-### 6. Exception Handling
-The USSD adapter has a self-rendering exception handler. To use it, `throw new UssdException` of the `TNM\USSD\Exceptions` namespace. It takes two params: the `request` object and the message you want to pass to the user. The exception handler renders a USSD screen with the error message and terminates the session.
+### Exception Handling
+The USSD adapter has a self-rendering exception handler. To use it, `throw new UssdException` of the 
+`TNM\USSD\Exceptions` namespace. It takes two params: the `request` object and the message you want to pass to the 
+user. The exception handler renders a USSD screen with the error message and terminates the session.
 
-### 7. Input Data Validation
+### Input Data Validation
 You can set rules to validate the user input by using `Validates` trait of the `TNM\USSD\Http` namespace.
 The trail will require you to implement `rules()` method, which should return a string of validation rules. 
 
 To validate input, call `$this->validate($this->request, $label)` in `execute()` method of your `Screen` class.
 
-If the input has a validation error, `ValidationException` of the `TNM\USSD\Exceptions` namespace will be thrown and an error screen will be rendered for you automatically.
+If the input has a validation error, `ValidationException` of the `TNM\USSD\Exceptions` namespace will be thrown and an 
+error screen will be rendered for you automatically.
 
 ```php
 namespace App\Screens;
