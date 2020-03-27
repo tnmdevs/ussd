@@ -69,20 +69,26 @@ abstract class Screen
     /**
      * Retrieve payload passed to the session
      * @param string $key
-     * @return string
+     * @param bool $assoc
+     * @return string|array
      */
-    protected function payload(string $key): string
+    protected function payload(string $key, bool $assoc = false)
     {
-        return $this->request->trail->getPayload($key);
+        $value = $this->request->trail->getPayload($key);
+        return ($assoc) ? unserialize($value) : $value;
     }
+
 
     /**
      * Add payload to the session
      * @param string $key
      * @param $value
+     * @param bool $assoc
+     * @return void
      */
-    public function addPayload(string $key, $value)
+    public function addPayload(string $key, $value, bool $assoc = false)
     {
+        $value = ($assoc && is_array($value)) ? serialize($value) : $value;
         return $this->request->trail->addPayload($key, $value);
     }
 
