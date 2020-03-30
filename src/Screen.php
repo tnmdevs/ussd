@@ -4,6 +4,7 @@
 namespace TNM\USSD;
 
 
+use http\Encoding\Stream;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
 use TNM\USSD\Screens\Welcome;
@@ -47,6 +48,7 @@ abstract class Screen
      * @return Screen
      */
     abstract public function previous(): Screen;
+
     /**
      * Execute the selected option/action
      *
@@ -125,7 +127,7 @@ abstract class Screen
      */
     public function getItemAt(int $value): string
     {
-        if (!array_key_exists($value -1, $this->options())) return null;
+        if (!array_key_exists($value - 1, $this->options())) return null;
         return $this->options()[$value - 1];
     }
 
@@ -167,12 +169,14 @@ abstract class Screen
      */
     public function render(): string
     {
-        $this->request->trail->update(['state' => static::class]);
+        $this->request->trail->mark(static::class);
+
         return response()->ussd(
-            sprintf("%s\n%s%s",
+            sprintf(
+                "%s\n%s%s",
                 $this->message(),
                 $this->optionsAsString(),
-                $this->goesBack() ? sprintf("%s. Home \n%s. Back", Screen::HOME, Screen::PREVIOUS) : ""
+                $this->nav()
             ),
             $this->type()
         );
@@ -208,11 +212,16 @@ abstract class Screen
 
     public function inOptions(string $value): bool
     {
-        return array_key_exists($value -1, $this->options());
+        return array_key_exists($value - 1, $this->options());
     }
 
     public function value(): string
     {
         return $this->getRequestValue();
+    }
+
+    private function nav(): string
+    {
+        return $this->goesBack() ? sprintf("%s. Home \n%s. Back", Screen::HOME, Screen::PREVIOUS) : "";
     }
 }
