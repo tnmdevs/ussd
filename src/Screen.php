@@ -202,8 +202,8 @@ abstract class Screen
     public function withinRange(): bool
     {
         if ($this->inOptions($this->request->message) || $this->doesntHaveOptions()) return true;
-        if (!is_numeric($this->request->message)) return false;
-        return $this->request->message == '#' || $this->request->message == '0';
+
+        return $this->request->message == self::PREVIOUS || $this->request->message == self::HOME;
     }
 
     public function inOptions(string $value): bool
