@@ -10,25 +10,6 @@ class ValidationFailure extends Error
 {
 
     /**
-     * Add message to the screen
-     *
-     * @return string
-     */
-    protected function message(): string
-    {
-        return "To be replaced with your custom message";
-    }
-
-    /**
-     * Add options to the screen
-     * @return array
-     */
-    protected function options(): array
-    {
-        return [];
-    }
-
-    /**
     * Previous screen
     * return Screen $screen
     */

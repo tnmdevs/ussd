@@ -16,7 +16,7 @@ class Error extends Screen
         $this->message = $message;
     }
 
-    private $message;
+    protected $message;
 
     /**
      * Add message to the screen
