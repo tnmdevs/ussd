@@ -15,12 +15,10 @@ class UssdServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
 
         Response::macro('ussd', function (string $message, int $type) {
-            return
-                "<ussd>" .
-                "<type>$type</type>" .
-                "<msg>$message</msg>" .
-                "<premium><cost>0</cost><ref>NULL</ref></premium>" .
-                "</ussd>";
+            return sprintf(
+                "<ussd><type>%s</type><msg>%s</msg><premium><cost>0</cost><ref>NULL</ref></premium></ussd>",
+                $type, $message
+            );
         });
 
     }
