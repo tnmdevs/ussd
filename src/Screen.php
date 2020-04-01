@@ -6,6 +6,7 @@ namespace TNM\USSD;
 
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
+use TNM\USSD\Screens\Error;
 use TNM\USSD\Screens\Welcome;
 
 abstract class Screen
@@ -169,9 +170,7 @@ abstract class Screen
      */
     public function render(): string
     {
-        if ($this->request->trail) $this->request->trail->mark(static::class);
-
-        if (config('app.env') == 'testing') return \response()->cli($this->getResponseMessage(), $this->type());
+        $this->makeTrail();
 
         return response()->ussd($this->getResponseMessage(), $this->type());
     }
@@ -222,5 +221,12 @@ abstract class Screen
     private function getResponseMessage(): string
     {
         return sprintf("%s\n%s%s", $this->message(), $this->optionsAsString(), $this->nav());
+    }
+
+    private function makeTrail(): void
+    {
+        if ($this instanceof Error) return;
+
+        if ($this->request->trail) $this->request->trail->mark(static::class);
     }
 }
