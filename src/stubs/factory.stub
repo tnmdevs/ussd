@@ -1,0 +1,28 @@
+<?php
+
+
+namespace App\Factories;
+
+
+use TNM\USSD\Factories\ScreenFactory;
+use TNM\USSD\Http\Request;
+
+class {{class}} extends ScreenFactory
+{
+    /**
+    * @var Request
+    */
+    protected $request;
+
+    /**
+    * @var string
+    */
+    protected $value;
+
+    public function make()
+    {
+        switch($this->value) {
+            // TODO your logic for rendering the next screen
+        }
+    }
+}
