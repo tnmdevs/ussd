@@ -12,7 +12,7 @@ class UssdException extends \Exception
     /**
      * @var Request
      */
-    private $request;
+    protected $request;
 
     public function __construct(Request $request, string $message)
     {

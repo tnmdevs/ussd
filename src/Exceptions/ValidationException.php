@@ -10,7 +10,7 @@ class ValidationException extends UssdException
     /**
      * @var Request
      */
-    private $request;
+    protected $request;
 
     public function render()
     {

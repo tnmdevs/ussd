@@ -4,7 +4,6 @@
 namespace TNM\USSD;
 
 
-use http\Encoding\Stream;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
 use TNM\USSD\Screens\Welcome;
@@ -122,11 +121,12 @@ abstract class Screen
     /**
      * Get value equivalent to the selected option
      *
-     * @param int $value
+     * @param $value
      * @return string
      */
-    public function getItemAt(int $value): string
+    public function getItemAt($value): string
     {
+        if ($this->doesntHaveOptions()) return $value;
         if (!array_key_exists($value - 1, $this->options())) return null;
         return $this->options()[$value - 1];
     }
@@ -169,17 +169,11 @@ abstract class Screen
      */
     public function render(): string
     {
-        $this->request->trail->mark(static::class);
+        if ($this->request->trail) $this->request->trail->mark(static::class);
 
-        return response()->ussd(
-            sprintf(
-                "%s\n%s%s",
-                $this->message(),
-                $this->optionsAsString(),
-                $this->nav()
-            ),
-            $this->type()
-        );
+        if (config('app.env') == 'testing') return \response()->cli($this->getResponseMessage(), $this->type());
+
+        return response()->ussd($this->getResponseMessage(), $this->type());
     }
 
     /**
@@ -205,7 +199,7 @@ abstract class Screen
 
     public function withinRange(): bool
     {
-        if ($this->inOptions($this->request->message) || $this->doesntHaveOptions()) return true;
+        if ($this->doesntHaveOptions() || $this->inOptions($this->request->message)) return true;
 
         return $this->request->message == self::PREVIOUS || $this->request->message == self::HOME;
     }
@@ -223,5 +217,10 @@ abstract class Screen
     private function nav(): string
     {
         return $this->goesBack() ? sprintf("%s. Home \n%s. Back", Screen::HOME, Screen::PREVIOUS) : "";
+    }
+
+    private function getResponseMessage(): string
+    {
+        return sprintf("%s\n%s%s", $this->message(), $this->optionsAsString(), $this->nav());
     }
 }
