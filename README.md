@@ -186,9 +186,11 @@ class EnterPhoneNumber extends Screen
 }      
 ```
 
-### Extension
+### Extending for Multiple Implemtentation
 
-USSD Gateway interfaces vary with network providers. This package can be extended to work for any interface by providing 
+The TNM USSD Adapter can be used on different USSD Gateways and different mobile network providers. We have a hot-swappable interface wich you can implement depending on the specification of the provider you're developing for.
+
+This package can be extended to work for any interface by providing 
 logic for decoding requests from the gateway and encoding requests.
 
 You can create your own implementation by creating a custom `Request` class. This request should implement the 
@@ -197,7 +199,7 @@ request class:
 * `getSession()` should return the session `id` assigned by the gateway
 * `getMsisdn()` should return the msisdn making a ussd request
 * `getMessage()` should return the message sent with the request
-*  `getType()` should the type of request.
+* `getType()` should the type of request.
 
 The documentation of your USSD GW Interface can give you more details on how to get these details
 
