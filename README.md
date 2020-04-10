@@ -186,6 +186,28 @@ class EnterPhoneNumber extends Screen
 }      
 ```
 
+### Extension
+
+USSD Gateway interfaces vary with network providers. This package can be extended to work for any interface by providing 
+logic for decoding requests from the gateway and encoding requests.
+
+You can create your own implementation by creating a custom `Request` class. This request should implement the 
+`UssdRequestInterface` of the `TNM\USSD\Http` namespace. You will have to implement the following methods within your 
+request class:
+* `getSession()` should return the session `id` assigned by the gateway
+* `getMsisdn()` should return the msisdn making a ussd request
+* `getMessage()` should return the message sent with the request
+*  `getType()` should the type of request.
+
+The documentation of your USSD GW Interface can give you more details on how to get these details
+
+Similarly, responses going to the gateway implements the `UssdResponseInterface` of the same namespace. Your custom 
+response should encode the response the way your gateway specifies it. You will be required to implement `make` method
+which must return an instance of `Illuminate\Http\Response`
+
+You can bind your implementation to the interface the way it is documented in Laravel documentation 
+https://laravel.com/docs/7.x/container#binding-interfaces-to-implementations
+
 ### Example Screen Implementation
 
 ```php

@@ -32,7 +32,7 @@ class Request extends BaseRequest
         parent::__construct();
         $this->setProperties(resolve(UssdRequestInterface::class));
 
-        if (!$this->valid) return;
+        if ($this->invalid()) return;
 
         $this->setSessionLocale();
         $this->trail = $this->getTrail();
