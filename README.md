@@ -1,10 +1,7 @@
 # TNM USSD Adapter - Laravel 
 
 This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD 
-channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. 
-
-* Disclaimer: There is no guarantee that this adapter will work with any other USSD interface unless it exposes the 
-same interface as the one we developed for.
+channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. However, the interface is open and documentated for implementation with other USSD Interfaces. 
 
 ## Installation
 ```
