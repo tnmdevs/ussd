@@ -30,7 +30,7 @@ class Request extends BaseRequest
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties(request()->getContent());
+        $this->setProperties(UssdRequestInterface::getProperties());
 
         if (!$this->valid) return;
 
@@ -66,10 +66,8 @@ class Request extends BaseRequest
             array_key_exists('msg', $request);
     }
 
-    private function setProperties(string $params): void
+    private function setProperties(array $request): void
     {
-        $request = json_decode(json_encode(simplexml_load_string($params)), true);
-
         $this->setValid($request);
 
         if ($this->valid) {

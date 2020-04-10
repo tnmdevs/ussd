@@ -2,11 +2,14 @@
 
 namespace TNM\USSD;
 
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use TNM\USSD\Commands\Install;
 use TNM\USSD\Commands\MakeScreenFactory;
 use TNM\USSD\Commands\MakeUssd;
+use TNM\USSD\Http\UssdRequest;
+use TNM\USSD\Http\UssdRequestInterface;
+use TNM\USSD\Http\UssdResponse;
+use TNM\USSD\Http\UssdResponseInterface;
 
 class UssdServiceProvider extends ServiceProvider
 {
@@ -14,14 +17,6 @@ class UssdServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-
-        Response::macro('ussd', function (string $message, int $type) {
-            return sprintf(
-                "<ussd><type>%s</type><msg>%s</msg><premium><cost>0</cost><ref>NULL</ref></premium></ussd>",
-                $type, $message
-            );
-        });
-
     }
 
     public function register()
@@ -33,5 +28,8 @@ class UssdServiceProvider extends ServiceProvider
                 MakeScreenFactory::class
             ]);
         }
+
+        $this->app->bind(UssdRequestInterface::class, UssdRequest::class);
+        $this->app->bind(UssdResponseInterface::class, UssdResponse::class);
     }
 }
