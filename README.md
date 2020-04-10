@@ -205,7 +205,7 @@ The documentation of your USSD GW Interface can give you more details on how to 
 
 Similarly, responses going to the gateway implements the `UssdResponseInterface` of the same namespace. Your custom 
 response should encode the response the way your gateway specifies it. You will be required to implement `make` method
-which must return an instance of `Illuminate\Http\Response`
+which must return an instance of `Illuminate\Http\Response` or simply `return response()->make("your-response-here")` 
 
 You can bind your implementation to the interface the way it is documented in Laravel documentation 
 https://laravel.com/docs/7.x/container#binding-interfaces-to-implementations
