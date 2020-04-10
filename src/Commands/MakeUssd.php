@@ -7,11 +7,15 @@ use Illuminate\Console\Command;
 class MakeUssd extends Command
 {
     /**
+     * @var string
+     */
+    private $contents;
+    /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:ussd {name}';
+    protected $signature = 'make:ussd {name} {--message=}';
 
     /**
      * The console command description.
@@ -47,7 +51,8 @@ class MakeUssd extends Command
 
         if (!is_dir($path)) mkdir($path);
 
-        file_put_contents($fullPath, $this->replaceClassName());
+        $this->writeToFile($fullPath);
+
         $this->info('Created screen successfully.');
     }
 
@@ -56,8 +61,38 @@ class MakeUssd extends Command
         return __DIR__ . '/../stubs/screen.stub';
     }
 
-    public function replaceClassName()
+    public function buildContents(): string
     {
-        return str_replace('{{class}}', $this->argument('name'), file_get_contents($this->getStub()));
+        return $this->setContents()->replaceClassName()->replaceMessage()->build();
+    }
+
+    private function replaceMessage(): self
+    {
+        if ($this->option("message"))
+            $this->contents = str_replace('{{message}}', $this->option('message'), $this->contents);
+
+        return $this;
+    }
+
+    private function replaceClassName(): self
+    {
+        $this->contents = str_replace('{{class}}', $this->argument('name'), $this->contents);
+        return $this;
+    }
+
+    private function setContents(): self
+    {
+        $this->contents = file_get_contents($this->getStub());
+        return $this;
+    }
+
+    private function build(): string
+    {
+        return $this->contents;
+    }
+
+    private function writeToFile(string $fullPath): void
+    {
+        file_put_contents($fullPath, $this->buildContents());
     }
 }

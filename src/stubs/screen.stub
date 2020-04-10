@@ -16,7 +16,7 @@ class {{class}} extends Screen
      */
     protected function message(): string
     {
-        return "To be replaced with your custom message";
+        return "{{message}}";
     }
 
     /**
@@ -25,7 +25,6 @@ class {{class}} extends Screen
      */
     protected function options(): array
     {
-        // To be replaced with an array of your options
         return [];
     }
 
