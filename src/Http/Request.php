@@ -30,7 +30,7 @@ class Request extends BaseRequest
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties(UssdRequestInterface::getProperties());
+        $this->setProperties(resolve(UssdResponseInterface::class));
 
         if (!$this->valid) return;
 
@@ -53,28 +53,28 @@ class Request extends BaseRequest
         return !$this->valid;
     }
 
-    private function setValid($request): void
+    private function setValid(UssdRequestInterface $request): void
     {
         if (!$request) {
             $this->valid = false;
             return;
         }
 
-        $this->valid = array_key_exists('msisdn', $request) &&
-            array_key_exists('sessionid', $request) &&
-            array_key_exists('type', $request) &&
-            array_key_exists('msg', $request);
+        $this->valid = !empty($request->getMsisdn()) &&
+            !empty($request->getSession()) &&
+            !empty($request->getType()) &&
+            !empty($request->getMessage());
     }
 
-    private function setProperties(array $request): void
+    private function setProperties(UssdRequestInterface $request): void
     {
         $this->setValid($request);
 
         if ($this->valid) {
-            $this->msisdn = $request["msisdn"];
-            $this->session = $request["sessionid"];
-            $this->type = $request["type"];
-            $this->message = $request["msg"];
+            $this->msisdn = $request->getMsisdn();
+            $this->session = $request->getSession();
+            $this->type = $request->getType();
+            $this->message = $request->getType();
         }
     }
 
