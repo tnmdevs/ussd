@@ -30,7 +30,7 @@ class Request extends BaseRequest
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties(resolve(UssdResponseInterface::class));
+        $this->setProperties(resolve(UssdRequestInterface::class));
 
         if (!$this->valid) return;
 
