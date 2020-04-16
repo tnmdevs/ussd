@@ -3,6 +3,7 @@
 namespace TNM\USSD;
 
 use Illuminate\Support\ServiceProvider;
+use TNM\USSD\Commands\CleanUp;
 use TNM\USSD\Commands\Install;
 use TNM\USSD\Commands\MakeScreenFactory;
 use TNM\USSD\Commands\MakeUssd;
@@ -25,7 +26,8 @@ class UssdServiceProvider extends ServiceProvider
             $this->commands([
                 MakeUssd::class,
                 Install::class,
-                MakeScreenFactory::class
+                MakeScreenFactory::class,
+                CleanUp::class
             ]);
         }
 
