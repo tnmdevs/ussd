@@ -183,7 +183,7 @@ class EnterPhoneNumber extends Screen
 }      
 ```
 
-### Extending for Multiple Implemtentation
+### Extending for Multiple Implementation
 
 The TNM USSD Adapter can be used on different USSD Gateways and different mobile network providers. We have a hot-swappable interface wich you can implement depending on the specification of the provider you're developing for.
 
@@ -206,6 +206,35 @@ which must return an instance of `Illuminate\Http\Response` or simply `return re
 
 You can bind your implementation to the interface the way it is documented in Laravel documentation 
 https://laravel.com/docs/7.x/container#binding-interfaces-to-implementations
+
+### Localization
+
+You can set the session language in any screen of the application. The following screen will come in the newly selected 
+language. 
+
+```php
+$this->request->trail->setLocale('en');
+```
+
+This feature implements the Laravel's localization with language files. Refer to the Laravel docs for more detail.
+So your implementation can be like the following
+
+```php
+public function message(): string 
+{
+    return __("screens.welcome_message");
+}
+```
+
+### Session Data CleanUp
+
+The package keeps track of sessions using a database table. This database table may need to clean-up after some time.
+To clean up run the following command in the application directory
+```bash
+php artisan ussd:clean-up --days=30
+```
+
+It takes the option of number of days' data to preserve. If no option is passed, it deletes everything older than 60 days.
 
 ### Example Screen Implementation
 
@@ -249,7 +278,7 @@ class Subscribe extends Screen
 
 namespace App\Screens;
 
-use TNM\USSD\Screen;
+use Exception;use TNM\USSD\Screen;
 use TNM\USSD\Exceptions\UssdException;
 
 class ConfirmSubscription extends Screen
@@ -275,7 +304,7 @@ class ConfirmSubscription extends Screen
             $service->subscribe($this->payload('service'), $this->request->msisdn);
             return (new Subscribed($this->request))->render();
             
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new UssdException($this->request, "Subscription failed. Please try again later");
         }
     }
