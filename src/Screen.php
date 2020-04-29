@@ -126,7 +126,7 @@ abstract class Screen
      * @param $value
      * @return string
      */
-    public function getItemAt($value): string
+    public function getItemAt($value): ?string
     {
         if ($this->doesntHaveOptions()) return $value;
         if (!array_key_exists($value - 1, $this->options())) return null;
