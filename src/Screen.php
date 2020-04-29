@@ -4,9 +4,9 @@
 namespace TNM\USSD;
 
 
+use TNM\USSD\Factories\ResponseFactory;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
-use TNM\USSD\Http\UssdResponseInterface;
 use TNM\USSD\Screens\Error;
 use TNM\USSD\Screens\Welcome;
 
@@ -173,7 +173,7 @@ abstract class Screen
     {
         $this->makeTrail();
 
-        return UssdResponseInterface::make($this->getResponseMessage(), $this->type());
+        return ResponseFactory::make()->respond($this->getResponseMessage(), $this->type());
     }
 
     /**
