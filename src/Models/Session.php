@@ -45,4 +45,15 @@ class Session extends Model
 
         return null;
     }
+
+    public function setLocale(string $locale): self
+    {
+        $this->update(['locale' => $locale]);
+        return $this;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->{'locale'};
+    }
 }
