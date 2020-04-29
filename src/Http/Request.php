@@ -4,6 +4,7 @@
 namespace TNM\USSD\Http;
 
 use Illuminate\Http\Request as BaseRequest;
+use TNM\USSD\Factories\RequestFactory;
 use TNM\USSD\Models\Session;
 use TNM\USSD\Screen;
 
@@ -30,7 +31,7 @@ class Request extends BaseRequest
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties(resolve(UssdRequestInterface::class));
+        $this->setProperties(RequestFactory::make());
 
         if ($this->invalid()) return;
 
