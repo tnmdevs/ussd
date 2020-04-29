@@ -13,7 +13,7 @@ class CleanUp extends Command
      *
      * @var string
      */
-    protected $signature = 'ussd:cleanup {--days=}';
+    protected $signature = 'ussd:clean-up {--days=}';
 
     /**
      * The console command description.
@@ -39,6 +39,8 @@ class CleanUp extends Command
      */
     public function handle()
     {
+        if (!$this->confirm("This will delete all old session data. Are you sure?")) return;
+
         $days = $this->option('days') ?: 60;
 
         try {
@@ -50,3 +52,4 @@ class CleanUp extends Command
         $this->info('Session logs cleaned up successfully');
     }
 }
+
