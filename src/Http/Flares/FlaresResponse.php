@@ -1,14 +1,14 @@
 <?php
 
 
-namespace TNM\USSD\Http;
+namespace TNM\USSD\Http\Flares;
 
 
+use TNM\USSD\Http\UssdResponseInterface;
 use TNM\USSD\Screen;
 
 class FlaresResponse implements UssdResponseInterface
 {
-
     public function respond(Screen $screen)
     {
         $content = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';

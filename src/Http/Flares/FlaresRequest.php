@@ -1,10 +1,13 @@
 <?php
 
 
-namespace TNM\USSD\Http;
+namespace TNM\USSD\Http\Flares;
 
 
-class UssdRequest implements UssdRequestInterface
+use TNM\USSD\Http\UssdRequestInterface;
+use TNM\USSD\Models\Session;
+
+class FlaresRequest implements UssdRequestInterface
 {
     /**
      * @var array
@@ -23,16 +26,16 @@ class UssdRequest implements UssdRequestInterface
 
     public function getSession(): string
     {
-        return $this->request['sessionid'];
+        return $this->request['sessionId'];
     }
 
     public function getType(): int
     {
-        return $this->request['type'];
+        return Session::findBySessionId($this->getSession())->exists() ? 2 : 1;
     }
 
     public function getMessage(): string
     {
-        return $this->request['msg'];
+        return $this->request['subscriberInput'];
     }
 }

@@ -4,8 +4,8 @@
 namespace TNM\USSD\Factories;
 
 
-use TNM\USSD\Http\FlaresResponse;
-use TNM\USSD\Http\UssdResponse;
+use TNM\USSD\Http\Flares\FlaresResponse;
+use TNM\USSD\Http\TruRoute\TruRouteResponse;
 use TNM\USSD\Http\UssdResponseInterface;
 use function request;
 
@@ -17,7 +17,7 @@ class ResponseFactory
             case 'flares':
                 return new FlaresResponse();
             default:
-                return new UssdResponse();
+                return new TruRouteResponse();
         }
     }
 }

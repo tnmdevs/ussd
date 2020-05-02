@@ -31,7 +31,7 @@ class Request extends BaseRequest
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties(RequestFactory::make());
+        $this->setProperties((new RequestFactory())->make());
 
         if ($this->invalid()) return;
 

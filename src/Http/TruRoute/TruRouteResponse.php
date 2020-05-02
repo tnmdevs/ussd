@@ -1,12 +1,13 @@
 <?php
 
 
-namespace TNM\USSD\Http;
+namespace TNM\USSD\Http\TruRoute;
 
 
+use TNM\USSD\Http\UssdResponseInterface;
 use TNM\USSD\Screen;
 
-class UssdResponse implements UssdResponseInterface
+class TruRouteResponse implements UssdResponseInterface
 {
     public function respond(Screen $screen)
     {
