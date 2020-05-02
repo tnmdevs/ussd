@@ -7,6 +7,7 @@ namespace TNM\USSD;
 use TNM\USSD\Factories\ResponseFactory;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
+use TNM\USSD\Models\TransactionTrail;
 use TNM\USSD\Screens\Error;
 use TNM\USSD\Screens\Welcome;
 
@@ -184,7 +185,9 @@ abstract class Screen
      */
     public static function handle(Request $request)
     {
-        return (static::getInstance($request))->execute();
+        $screen = static::getInstance($request);
+        TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
+        return $screen->execute();
     }
 
     public function doesntHaveOptions(): bool
@@ -226,6 +229,7 @@ abstract class Screen
 
     private function makeTrail(): void
     {
+
         if ($this instanceof Error) return;
 
         if ($this->request->trail) $this->request->trail->mark(static::class);
