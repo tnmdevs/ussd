@@ -7,10 +7,6 @@ use TNM\USSD\Commands\CleanUp;
 use TNM\USSD\Commands\Install;
 use TNM\USSD\Commands\MakeScreenFactory;
 use TNM\USSD\Commands\MakeUssd;
-use TNM\USSD\Http\UssdRequest;
-use TNM\USSD\Http\UssdRequestInterface;
-use TNM\USSD\Http\UssdResponse;
-use TNM\USSD\Http\UssdResponseInterface;
 
 class UssdServiceProvider extends ServiceProvider
 {
@@ -30,8 +26,5 @@ class UssdServiceProvider extends ServiceProvider
                 CleanUp::class
             ]);
         }
-
-        $this->app->bind(UssdRequestInterface::class, UssdRequest::class);
-        $this->app->bind(UssdResponseInterface::class, UssdResponse::class);
     }
 }
