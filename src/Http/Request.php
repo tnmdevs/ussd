@@ -75,7 +75,7 @@ class Request extends BaseRequest
             $this->msisdn = $request->getMsisdn();
             $this->session = $request->getSession();
             $this->type = $request->getType();
-            $this->message = $request->getType();
+            $this->message = $request->getMessage();
         }
     }
 
