@@ -5,6 +5,7 @@ namespace TNM\USSD\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use TNM\USSD\Models\Session;
+use TNM\USSD\Models\TransactionTrail;
 
 class CleanUp extends Command
 {
@@ -39,12 +40,15 @@ class CleanUp extends Command
      */
     public function handle()
     {
-        if (!$this->confirm("This will delete all old session data. Are you sure?")) return;
-
         $days = $this->option('days') ?: 60;
+
+        if (!$this->confirm(sprintf("This will delete all session data older that %s days ago. Are you sure?", $days)))
+            return;
+
 
         try {
             Session::where('created_at', '<', now()->subDays($days))->delete();
+            TransactionTrail::where('created_at', '<', now()->subDays($days))->delete();
         } catch (Exception $exception) {
             $this->error(sprintf("Operation failed: %s", $exception->getMessage()));
         }
