@@ -4,7 +4,9 @@
 namespace TNM\USSD\Http;
 
 
+use TNM\USSD\Screen;
+
 interface UssdResponseInterface
 {
-    public function respond($message, $type);
+    public function respond(Screen $screen);
 }

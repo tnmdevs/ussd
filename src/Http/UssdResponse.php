@@ -4,13 +4,15 @@
 namespace TNM\USSD\Http;
 
 
+use TNM\USSD\Screen;
+
 class UssdResponse implements UssdResponseInterface
 {
-    public function respond($message, $type)
+    public function respond(Screen $screen)
     {
         return sprintf(
             "<ussd><type>%s</type><msg>%s</msg><premium><cost>0</cost><ref>NULL</ref></premium></ussd>",
-            $type, $message
+            $screen->type(), $screen->getResponseMessage()
         );
     }
 }

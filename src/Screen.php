@@ -13,7 +13,7 @@ use TNM\USSD\Screens\Welcome;
 abstract class Screen
 {
     const PREVIOUS = '#';
-    const HOME = '0';
+    const HOME = '99';
     /**
      * USSD Request object
      *
@@ -110,7 +110,7 @@ abstract class Screen
      *
      * @return int
      */
-    protected function type(): int
+    public function type(): int
     {
         return $this->acceptsResponse() ? Response::RESPONSE : Response::RELEASE;
     }
@@ -173,7 +173,7 @@ abstract class Screen
     {
         $this->makeTrail();
 
-        return ResponseFactory::make()->respond($this->getResponseMessage(), $this->type());
+        return (new ResponseFactory())->make()->respond($this);
     }
 
     /**
@@ -219,7 +219,7 @@ abstract class Screen
         return $this->goesBack() ? sprintf("%s. Home \n%s. Back", Screen::HOME, Screen::PREVIOUS) : "";
     }
 
-    private function getResponseMessage(): string
+    public function getResponseMessage(): string
     {
         return sprintf("%s\n%s%s", $this->message(), $this->optionsAsString(), $this->nav());
     }
