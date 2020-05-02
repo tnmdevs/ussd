@@ -4,13 +4,20 @@
 namespace TNM\USSD\Factories;
 
 
+use TNM\USSD\Http\FlaresResponse;
 use TNM\USSD\Http\UssdResponse;
 use TNM\USSD\Http\UssdResponseInterface;
+use function request;
 
 class ResponseFactory
 {
-    public static function make(): UssdResponseInterface
+    public function make(): UssdResponseInterface
     {
-        return new UssdResponse();
+        switch (request()->route('adapter')) {
+            case 'flares':
+                return new FlaresResponse();
+            default:
+                return new UssdResponse();
+        }
     }
 }
