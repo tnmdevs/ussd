@@ -32,4 +32,9 @@ class ValidationFailure extends Error
     {
         return true;
     }
+
+    public function acceptsResponse(): bool
+    {
+        return true;
+    }
 }
