@@ -13,6 +13,11 @@ class Session extends Model
         return static::where('session_id', $session)->firstOrFail();
     }
 
+    public static function notCreated(string $session): bool
+    {
+        return static::where('session_id', $session)->doesntExist();
+    }
+
     public static function track(string $session, string $state, string $msisdn): self
     {
         return static::create([
@@ -48,6 +53,7 @@ class Session extends Model
 
     public function setLocale(string $locale): self
     {
+        app()->setLocale($locale);
         $this->update(['locale' => $locale]);
         return $this;
     }
