@@ -81,7 +81,7 @@ class Request extends BaseRequest
 
     private function setSessionLocale(): void
     {
-        if (Session::where(['session_id' => $this->session])->doesntExist()) return;
+        if (Session::notCreated($this->session)) return;
 
         $session = Session::findBySessionId($this->session);
         app()->setLocale($session->{'locale'});
@@ -101,7 +101,7 @@ class Request extends BaseRequest
     {
         return Session::firstOrCreate(
             ['session_id' => $this->session],
-            ['state' => 'init', 'msisdn' => $this->msisdn]
+            ['state' => 'App\Screens\Welcome', 'msisdn' => $this->msisdn]
         );
     }
 
