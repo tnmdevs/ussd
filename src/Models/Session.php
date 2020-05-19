@@ -3,6 +3,7 @@
 namespace TNM\USSD\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Session extends Model
 {
@@ -11,6 +12,11 @@ class Session extends Model
     public static function findBySessionId(string $session): Session
     {
         return static::where('session_id', $session)->firstOrFail();
+    }
+
+    public static function findByPhoneNumber(string $phone): Collection
+    {
+        return static::where('msisdn', $phone)->get();
     }
 
     public static function notCreated(string $session): bool

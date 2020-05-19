@@ -3,6 +3,7 @@
 namespace TNM\USSD\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class TransactionTrail extends Model
 {
@@ -15,5 +16,10 @@ class TransactionTrail extends Model
             'message' => $message,
             'response' => $response
         ]);
+    }
+
+    public static function findBySession(string $session): Collection
+    {
+        return static::where('session_id', $session)->get();
     }
 }
