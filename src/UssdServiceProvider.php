@@ -3,8 +3,10 @@
 namespace TNM\USSD;
 
 use Illuminate\Support\ServiceProvider;
+use TNM\USSD\Commands\AuditSession;
 use TNM\USSD\Commands\CleanUp;
 use TNM\USSD\Commands\Install;
+use TNM\USSD\Commands\ListUserTransactions;
 use TNM\USSD\Commands\MakeScreenFactory;
 use TNM\USSD\Commands\MakeUssd;
 
@@ -23,7 +25,9 @@ class UssdServiceProvider extends ServiceProvider
                 MakeUssd::class,
                 Install::class,
                 MakeScreenFactory::class,
-                CleanUp::class
+                CleanUp::class,
+                AuditSession::class,
+                ListUserTransactions::class
             ]);
         }
     }
