@@ -15,7 +15,7 @@ trait HasBundledOptions
     private function find(string $find, string $payload, string $using = 'humanized', string $value = null)
     {
         return Arr::first(unserialize($this->payload($payload)), function (array $array) use ($using, $value) {
-            $value = $value ? $value : $this->value();
+            $value = $value ?: $this->value();
             return $array[$using] == $value;
         })[$find];
     }
