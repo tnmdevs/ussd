@@ -42,9 +42,8 @@ class CleanUp extends Command
     {
         $days = $this->option('days') ?: 60;
 
-        if (!$this->confirm(sprintf("This will delete all session data older that %s days ago. Are you sure?", $days)))
+        if (!$this->confirm(sprintf("This will delete all session data older than %s days ago. Are you sure?", $days)))
             return;
-
 
         try {
             Session::where('created_at', '<', now()->subDays($days))->delete();
