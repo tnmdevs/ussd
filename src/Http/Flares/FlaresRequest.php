@@ -4,6 +4,7 @@
 namespace TNM\USSD\Http\Flares;
 
 
+use TNM\USSD\Http\Request;
 use TNM\USSD\Http\UssdRequestInterface;
 use TNM\USSD\Models\Session;
 
@@ -31,7 +32,7 @@ class FlaresRequest implements UssdRequestInterface
 
     public function getType(): int
     {
-        return Session::findBySessionId($this->getSession())->exists() ? 2 : 1;
+        return Session::findBySessionId($this->getSession())->exists() ? Request::RESPONSE : Request::INITIAL;
     }
 
     public function getMessage(): string
