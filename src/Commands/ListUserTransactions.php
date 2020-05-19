@@ -40,8 +40,10 @@ class ListUserTransactions extends Command
     {
         $transactions = Session::findByPhoneNumber($this->argument('phone'));
 
-        if ($transactions->isEmpty())
+        if ($transactions->isEmpty()) {
             $this->info(sprintf("There are no transactions by %s", $this->argument('phone')));
+            return;
+        }
 
         $this->table(['Session ID', 'Timestamp'], $transactions->map(function (Session $session) {
             return $session->only(['session_id', 'created_at']);

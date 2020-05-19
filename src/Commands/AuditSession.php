@@ -41,8 +41,10 @@ class AuditSession extends Command
     {
         $trail = TransactionTrail::findBySession($this->argument('session'));
 
-        if ($trail->isEmpty())
+        if ($trail->isEmpty()) {
             $this->info(sprintf("Session %s was not found", $this->argument('session')));
+            return;
+        }
 
         $this->table(['Message', 'Response', 'Timestamp'], $trail->map(function (TransactionTrail $trail) {
             return $trail->only(['message', 'response', 'created_at']);
