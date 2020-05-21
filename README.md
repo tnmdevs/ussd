@@ -217,7 +217,7 @@ $this->request->trail->setLocale('en');
 ```
 
 This feature implements the Laravel's localization with language files. Refer to the Laravel docs for more detail.
-So your implementation can be like the following
+So your implementation can be like the following:
 
 ```php
 public function message(): string 
@@ -226,15 +226,36 @@ public function message(): string
 }
 ```
 
+### Audit
+
+You can track user sessions, system messages and user responses with a CLI tool.
+
+```bash
+php artisan ussd:list <phone>
+```
+This command gives you a list of all the transactions that were done by a number. The list contains session ID and 
+timestamp.
+
+```bash
+php artisan ussd:audit <session-id>
+```
+This command gives you all the details of the transaction from the beginning of a session to the end. The trail includes
+system messages, user responses to each message and their timestamps in a chronological order. 
+
+When a user response was an option, it reports a string value that is represented by the number that was selected, saving you 
+from having to lookup which option was on number 1, 2 or etc.
+
 ### Session Data CleanUp
 
 The package keeps track of sessions using a database table. This database table may need to clean-up after some time.
-To clean up run the following command in the application directory
+To clean up run the following command in the application directory.
 ```bash
 php artisan ussd:clean-up --days=30
 ```
 
 It takes the option of number of days' data to preserve. If no option is passed, it deletes everything older than 60 days.
+
+* A note on audit: An audit trail will not be available for the data that has been cleaned up.
 
 ### Example Screen Implementation
 
