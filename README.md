@@ -1,5 +1,8 @@
 # TNM USSD Adapter
 
+This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD 
+channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. However, the interface is open and documentated for implementation with other USSD Interfaces. 
+
   * [Installation](#installation)
   * [Usage](#usage)
     + [Creating USSD Screens](#creating-ussd-screens)
@@ -25,10 +28,6 @@
     + [Example Screen Implementation](#example-screen-implementation)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
-
-This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD 
-channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. However, the interface is open and documentated for implementation with other USSD Interfaces. 
 
 ## Installation
 
