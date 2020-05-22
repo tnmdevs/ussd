@@ -1,9 +1,37 @@
 # TNM USSD Adapter
 
+  * [Installation](#installation)
+  * [Usage](#usage)
+    + [Creating USSD Screens](#creating-ussd-screens)
+    + [The `Request` object](#the--request--object)
+    + [Request Payload](#request-payload)
+      - [Setting request payload](#setting-request-payload)
+      - [Retrieving request payload](#retrieving-request-payload)
+      - [Using Arrays in Payload](#using-arrays-in-payload)
+    + [The Mandatory Methods](#the-mandatory-methods)
+    + [Optional Methods](#optional-methods)
+    + [Exception Handling](#exception-handling)
+    + [Input Data Validation](#input-data-validation)
+    + [Extending for Multiple Implementations](#extending-for-multiple-implementations)
+      - [Example Request Implementation](#example-request-implementation)
+        * [Required methods](#required-methods)
+      - [Example Response Implementation](#example-response-implementation)
+      - [Routing](#routing)
+        * [Sample Request Factory](#sample-request-factory)
+        * [Sample Response Factory](#sample-response-factory)
+    + [Localization](#localization)
+    + [Audit](#audit)
+    + [Session Data CleanUp](#session-data-cleanup)
+    + [Example Screen Implementation](#example-screen-implementation)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD 
 channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. However, the interface is open and documentated for implementation with other USSD Interfaces. 
 
 ## Installation
+
 ```
 composer require tnmdev/ussd
 ```
