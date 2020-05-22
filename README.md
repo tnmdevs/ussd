@@ -183,29 +183,112 @@ class EnterPhoneNumber extends Screen
 }      
 ```
 
-### Extending for Multiple Implementation
+### Extending for Multiple Implementations
 
-The TNM USSD Adapter can be used on different USSD Gateways and different mobile network providers. We have a hot-swappable interface wich you can implement depending on the specification of the provider you're developing for.
+This adapter was designed with extendability in mind. Right now it supports TruRoute and Flares USSD interfaces used by 
+TNM and Airtel Malawi respectively. However, with the pluggable interface, it can be extended to support any mobile 
+network operator.
 
-This package can be extended to work for any interface by providing 
-logic for decoding requests from the gateway and encoding requests.
+To extend, create a request and response class. These classes must implement the `TNM\USSD\Http\UssdRequestInterface` 
+and `TNM\USSD\Http\UssdResponseInterface` respectively.
 
-You can create your own implementation by creating a custom `Request` class. This request should implement the 
-`UssdRequestInterface` of the `TNM\USSD\Http` namespace. You will have to implement the following methods within your 
-request class:
-* `getSession()` should return the session `id` assigned by the gateway
+Implementation details of the request class may vary. However, we strongly recommend having a constructor that decodes
+the USSD request from the mobile operator into an array that should be assigned to `$request` private property and have 
+the interface methods return their values based on the private property.
+
+#### Example Request Implementation
+```php
+use TNM\USSD\Http\UssdRequestInterface;
+
+class TruRouteRequest implements UssdRequestInterface
+{
+    /**
+     * @var array
+     */
+    private $request;
+
+    public function __construct()
+    {
+        $this->request = json_decode(json_encode(simplexml_load_string(request()->getContent())), true);
+    }
+
+    public function getMsisdn(): string
+    {
+        return $this->request['msisdn'];
+    }
+    // ...
+}
+```
+##### Required methods
+The request interface requires you to implement the following methods: 
+* `getSession()` should return the session `id` assigned by the USSD gateway
 * `getMsisdn()` should return the msisdn making a ussd request
 * `getMessage()` should return the message sent with the request
-* `getType()` should the type of request.
+* `getType()` should return the type of request.
 
-The documentation of your USSD GW Interface can give you more details on how to get these details
+#### Example Response Implementation
 
-Similarly, responses going to the gateway implements the `UssdResponseInterface` of the same namespace. Your custom 
-response should encode the response the way your gateway specifies it. You will be required to implement `make` method
-which must return an instance of `Illuminate\Http\Response` or simply `return response()->make("your-response-here")` 
+The following is an example response class implementation. It has one required public method: `respond` which must 
+return a message in a format required by the network operator. 
+```php
+use TNM\USSD\Http\UssdResponseInterface;
 
-You can bind your implementation to the interface the way it is documented in Laravel documentation 
-https://laravel.com/docs/7.x/container#binding-interfaces-to-implementations
+use TNM\USSD\Screen;
+
+class TruRouteResponse implements UssdResponseInterface
+{
+    public function respond(Screen $screen)
+    {
+        return sprintf(
+            "<ussd><type>%s</type><msg>%s</msg><premium><cost>0</cost><ref>NULL</ref></premium></ussd>",
+            $screen->type(), $screen->getResponseMessage()
+        );
+    }
+}
+```
+#### Routing
+You can distinguish requests from different mobile operators using a route parameter `adapter`.   
+
+All requests from a network that uses `Flares` adapter should be routed to `api/ussd/flares`. So when you create your 
+own extension, the route for the operator should be `api/ussd/{adapter}`. 
+
+This is not resolved magically. You are required to define the implementation in `TNM\USSD\Factories\RequestFactory` and 
+`TNM\USSD\Factories\ResponseFactory`
+
+##### Sample Request Factory
+```php
+namespace TNM\USSD\Factories\RequestFactory;
+
+class RequestFactory
+{
+    public function make(): UssdRequestInterface
+    {
+        switch (request()->route('adapter')) {
+            case 'flares' :
+                return resolve(FlaresRequest::class);
+            default:
+                return resolve(TruRouteRequest::class);
+        }
+    }
+}
+```
+##### Sample Response Factory
+```php
+namespace TNM\USSD\Factories\ResponseFactory;
+
+class ResponseFactory
+{
+    public function make(): UssdResponseInterface
+    {
+        switch (request()->route('adapter')) {
+            case 'flares':
+                return resolve(FlaresResponse::class);
+            default:
+                return resolve(TruRouteResponse::class);
+        }
+    }
+}
+```
 
 ### Localization
 

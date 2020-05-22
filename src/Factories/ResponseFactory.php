@@ -15,9 +15,9 @@ class ResponseFactory
     {
         switch (request()->route('adapter')) {
             case 'flares':
-                return new FlaresResponse();
+                return resolve(FlaresResponse::class);
             default:
-                return new TruRouteResponse();
+                return resolve(TruRouteResponse::class);
         }
     }
 }
