@@ -1,7 +1,7 @@
 # TNM USSD Adapter
 
 This package creates an adapter, boilerplate code and functionality that lets you interact with USSDC and offer USSD 
-channel to your API. This adapter was specifically developed to interact with TruRoute USSD Interface. However, the interface is open and documentated for implementation with other USSD Interfaces. 
+channel to your API. The interface is open and documentated for implementation with various USSD interfaces. 
 
   * [Installation](#installation)
   * [Usage](#usage)
