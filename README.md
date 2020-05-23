@@ -79,17 +79,9 @@ accessed by other request within the session.
 Request payload can be added by calling `addPayload` method on request's trail object. It takes a key-value pair of 
 parameters. 
 ```php
-$this->request->trail->addPayload('phone', $this->getRequestValue());
-```
-This method is also delegated in the screen object as 
-```php
-$this->addPayload('key', 'value');
+$$this->addPayload('key', $this->value());
 ```
 #### Retrieving request payload
-```php
-$this->request->trail->payload('phone');
-```
-This is also delegated as 
 ```php
 $this->payload('key');
 ```
@@ -200,7 +192,8 @@ class EnterPhoneNumber extends Screen
     protected function execute()
     {
         $this->validate($this->request, 'phone');
-        // proceed with implementation
+        $this->addPayload('phone', $this->value());
+        return (new NextScreen($this->request))->render();
     }
 
     protected function rules() : string
@@ -340,13 +333,13 @@ public function message(): string
 
 You can track user sessions, system messages and user responses with a CLI tool.
 
-```bash
+```
 php artisan ussd:list <phone>
 ```
 This command gives you a list of all the transactions that were done by a number. The list contains session ID and 
 timestamp.
 
-```bash
+```
 php artisan ussd:audit <session-id>
 ```
 This command gives you all the details of the transaction from the beginning of a session to the end. The trail includes
@@ -380,19 +373,19 @@ class Subscribe extends Screen
 {
     public function message(): string
     {
-        return "Please select a service you want to subscribe to";
+        return "Please select a plan you want to subscribe to";
     }
 
     public function options(): array
     {
-        return ['Service 1', 'Service 2', 'Service 3'];
+        return ['Plan 1', 'Plan 2', 'Plan 3'];
     }
 
     public function execute()
     {
         // save the request value to session object 
         // to access it in the next screen with $this->payload($key) 
-        $this->addPayload('service', $this->getRequestValue());
+        $this->addPayload('plan', $this->value());
 
         return (new ConfirmSubscription($this->request))->render();
     }
@@ -416,7 +409,7 @@ class ConfirmSubscription extends Screen
 {
     public function message(): string
     {
-        return sprintf("Please confirm subscription to %s", $this->payload('service'));
+        return sprintf("Please confirm subscription to %s", $this->payload('plan'));
     }
 
     public function options(): array
@@ -426,13 +419,13 @@ class ConfirmSubscription extends Screen
 
     public function execute()
     {
-        if ($this->getRequestValue() === 'Cancel') return $this->previous()->render();
+        if ($this->value() === 'Cancel') return $this->previous()->render();
         
-        $service = new SubscriptionService();
+        $service = new SubscriptionService($this->request->msisdn);
 
         try {
-        
-            $service->subscribe($this->payload('service'), $this->request->msisdn);
+       
+            $service->subscribe($this->payload('plan'));
             return (new Subscribed($this->request))->render();
             
         } catch (Exception $exception) {
