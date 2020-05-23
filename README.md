@@ -320,6 +320,15 @@ public function message(): string
     return __("screens.welcome_message");
 }
 ```
+#### Sample Localization Implementation
+```php
+public function execute()
+{
+    $locale = $this->value() == 'English' ? 'en' : 'fr';
+    $this->request->trail->setLocale($locale);
+    return (new NextScreen($this->request))->render();
+}
+```
 
 ### Audit
 
