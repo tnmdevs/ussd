@@ -179,16 +179,8 @@ class EnterPhoneNumber extends Screen
         return 'Enter your phone number';
     }
     
-    protected function options() : array
-    {
-        return [];
-    }
+    //...
     
-    public function previous() : Screen
-    {
-        return new Welcome($this->request);
-    }
-
     protected function execute()
     {
         $this->validate($this->request, 'phone');
