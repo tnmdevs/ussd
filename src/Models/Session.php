@@ -33,6 +33,11 @@ class Session extends Model
         ]);
     }
 
+    public function payload()
+    {
+        return $this->hasMany(Payload::class);
+    }
+
     public function mark(string $state)
     {
         $this->update(['state' => $state]);
@@ -41,20 +46,13 @@ class Session extends Model
 
     public function addPayload(string $key, $value)
     {
-        if (!empty($this->{'payload'})) $payload = json_decode($this->{'payload'}, true);
-        $payload[$key] = $value;
-        $this->update(['payload' => json_encode($payload)]);
+        $value = is_array($value) ? json_encode($value) : $value;
+        $this->payload()->create(['key' => $key, $value => $value]);
     }
 
     public function getPayload(string $key)
     {
-        $payload = $this->{'payload'};
-        if (empty($payload)) return null;
-
-        $arr = json_decode($payload, true);
-        if (array_key_exists($key, $arr)) return $arr[$key];
-
-        return null;
+        return $this->payload()->where('key', $key)->first();
     }
 
     public function setLocale(string $locale): self
