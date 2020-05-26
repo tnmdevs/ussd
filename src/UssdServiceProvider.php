@@ -9,6 +9,7 @@ use TNM\USSD\Commands\Install;
 use TNM\USSD\Commands\ListUserTransactions;
 use TNM\USSD\Commands\MakeScreenFactory;
 use TNM\USSD\Commands\MakeUssd;
+use TNM\USSD\Commands\MonitorPayload;
 
 class UssdServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,8 @@ class UssdServiceProvider extends ServiceProvider
                 MakeScreenFactory::class,
                 CleanUp::class,
                 AuditSession::class,
-                ListUserTransactions::class
+                ListUserTransactions::class,
+                MonitorPayload::class,
             ]);
         }
     }
