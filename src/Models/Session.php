@@ -47,12 +47,12 @@ class Session extends Model
     public function addPayload(string $key, $value)
     {
         $value = is_array($value) ? json_encode($value) : $value;
-        $this->payload()->create(['key' => $key, $value => $value]);
+        $this->payload()->create(['key' => $key, 'value' => $value]);
     }
 
     public function getPayload(string $key)
     {
-        return $this->payload()->where('key', $key)->first();
+        return $this->payload()->where('key', $key)->latest()->first();
     }
 
     public function setLocale(string $locale): self

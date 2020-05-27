@@ -4,6 +4,7 @@ namespace TNM\USSD\Commands;
 
 use Illuminate\Console\Command;
 use TNM\USSD\Models\Payload;
+use TNM\USSD\Models\Session;
 
 class MonitorPayload extends Command
 {
@@ -33,7 +34,7 @@ class MonitorPayload extends Command
 
     public function handle()
     {
-        $payload = Payload::findBySession($this->argument('session'));
+        $payload = Session::findBySessionId($this->argument('session'))->payload()->get();
 
         if ($payload->isEmpty()) {
             $this->info(sprintf("Session %s does not have saved payload", $this->argument('session')));
