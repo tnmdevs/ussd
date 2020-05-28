@@ -1,6 +1,6 @@
 {
     "name": "tnmdev/ussd",
-    "description": "TruRoute USSD Adaptor for Laravel PHP",
+    "description": "USSD Adaptor for Laravel PHP",
     "type": "library",
     "license": "MIT",
     "authors": [
