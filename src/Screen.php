@@ -219,7 +219,12 @@ abstract class Screen
 
     private function nav(): string
     {
-        return $this->goesBack() ? sprintf("%s. Home \n%s. Back", Screen::HOME, Screen::PREVIOUS) : "";
+        return $this->goesBack() ? sprintf("%s. %s \n%s. %s",
+            Screen::HOME,
+            __("ussd::nav.home"),
+            Screen::PREVIOUS,
+            __("ussd::nav.back")
+        ) : "";
     }
 
     public function getResponseMessage(): string

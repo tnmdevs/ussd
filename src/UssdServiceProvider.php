@@ -18,6 +18,11 @@ class UssdServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadTranslationsFrom(__DIR__ . '/translations', 'ussd');
+
+        $this->publishes([
+            __DIR__ . '/translations' => resource_path('lang/vendor/ussd'),
+        ]);
     }
 
     public function register()
