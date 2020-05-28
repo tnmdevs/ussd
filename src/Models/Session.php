@@ -52,7 +52,7 @@ class Session extends Model
 
     public function getPayload(string $key)
     {
-        return $this->payload()->where('key', $key)->latest()->first();
+        return $this->payload()->where('key', $key)->latest()->first()->{'value'};
     }
 
     public function setLocale(string $locale): self
