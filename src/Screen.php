@@ -209,6 +209,8 @@ abstract class Screen
 
     public function inOptions(string $value): bool
     {
+        if ($value == static::HOME || $value == static::PREVIOUS) return true;
+        if (!is_numeric($value)) return false;
         return array_key_exists($value - 1, $this->options());
     }
 
@@ -219,7 +221,7 @@ abstract class Screen
 
     private function nav(): string
     {
-        return $this->goesBack() ? sprintf("%s. %s \n%s. %s",
+        return $this->goesBack() ? sprintf("%s %s \n%s %s",
             Screen::HOME,
             __("ussd::nav.home"),
             Screen::PREVIOUS,
