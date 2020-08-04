@@ -4,6 +4,7 @@
 namespace TNM\USSD;
 
 
+use Illuminate\Support\Collection;
 use TNM\USSD\Factories\ResponseFactory;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
@@ -80,6 +81,15 @@ abstract class Screen
     {
         $value = $this->request->trail->getPayload($key);
         return ($assoc) ? unserialize($value) : $value;
+    }
+
+    /**
+     * Retrieve a collection of all payload data
+     * @return Collection
+     */
+    protected function payloads(): Collection
+    {
+        return $this->request->trail->getPayloads();
     }
 
 

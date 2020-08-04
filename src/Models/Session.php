@@ -55,6 +55,11 @@ class Session extends Model
         return $this->payload()->where('key', $key)->latest()->first()->{'value'};
     }
 
+    public function getPayloads(): Collection
+    {
+        return $this->payload()->get();
+    }
+
     public function setLocale(string $locale): self
     {
         app()->setLocale($locale);
