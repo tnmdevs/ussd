@@ -11,6 +11,12 @@ use TNM\USSD\Commands\MakeScreenFactory;
 use TNM\USSD\Commands\MakeUssd;
 use TNM\USSD\Commands\MonitorPayload;
 use TNM\USSD\Commands\Update;
+use TNM\USSD\Models\Payload;
+use TNM\USSD\Models\Session;
+use TNM\USSD\Models\TransactionTrail;
+use TNM\USSD\Observers\PayloadObserver;
+use TNM\USSD\Observers\SessionObserver;
+use TNM\USSD\Observers\TransactionTrailObserver;
 
 class UssdServiceProvider extends ServiceProvider
 {
@@ -23,6 +29,10 @@ class UssdServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/translations' => resource_path('lang/vendor/ussd'),
         ]);
+
+        Payload::observe(PayloadObserver::class);
+        TransactionTrail::observe(TransactionTrailObserver::class);
+        Session::observe(SessionObserver::class);
     }
 
     public function register()

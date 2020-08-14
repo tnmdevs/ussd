@@ -15,7 +15,7 @@ class CleanUp extends Command
      *
      * @var string
      */
-    protected $signature = 'ussd:clean-up {--days=}';
+    protected $signature = 'ussd:clean-up {--m|minutes= : Number of minutes to clear} {--f|force : Force to suppress confirmation}';
 
     /**
      * The console command description.
@@ -41,15 +41,17 @@ class CleanUp extends Command
      */
     public function handle()
     {
-        $days = $this->option('days') ?: 60;
+        $minutes = $this->option('minutes') ?: 10;
 
-        if (!$this->confirm(sprintf("This will delete all session data older than %s days ago. Are you sure?", $days)))
-            return;
+        if (!$this->option('force')) {
+            if (!$this->confirm(sprintf("This will delete all session data older than %s minutes ago. Are you sure?", $minutes)))
+                return;
+        }
 
         try {
-            Session::where('created_at', '<', now()->subDays($days))->delete();
-            TransactionTrail::where('created_at', '<', now()->subDays($days))->delete();
-            Payload::where('created_at', '<', now()->subDays($days))->delete();
+            Session::where('created_at', '<', now()->subMinutes($minutes))->delete();
+            TransactionTrail::where('created_at', '<', now()->subMinutes($minutes))->delete();
+            Payload::where('created_at', '<', now()->subMinutes($minutes))->delete();
         } catch (Exception $exception) {
             $this->error(sprintf("Operation failed: %s", $exception->getMessage()));
         }
