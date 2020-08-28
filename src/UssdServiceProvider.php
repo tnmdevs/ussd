@@ -32,6 +32,10 @@ class UssdServiceProvider extends ServiceProvider
             __DIR__ . '/translations' => resource_path('lang/vendor/ussd'),
         ]);
 
+        $this->publishes([
+            __DIR__ . '/config/ussd.php' => config_path('ussd.php'),
+        ]);
+
         Payload::observe(PayloadObserver::class);
         TransactionTrail::observe(TransactionTrailObserver::class);
         Session::observe(SessionObserver::class);
@@ -40,6 +44,10 @@ class UssdServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/ussd.php', 'ussd'
+        );
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 MakeUssd::class,

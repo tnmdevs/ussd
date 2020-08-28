@@ -7,7 +7,9 @@ class Session extends AbstractSession
 
     public static function recentSessionByPhone(string $phone): ?self
     {
-        return Session::where('msisdn', $phone)->where('created_at', '<', now()->subMinutes(2))->latest()->first();
+        return Session::where('msisdn', $phone)
+            ->where('updated_at', '>=', now()->subMinutes(config('ussd.session.last_activity_minutes')))
+            ->latest()->first();
     }
 
     public static function hasRecentSessionByPhone(string $phone): bool
