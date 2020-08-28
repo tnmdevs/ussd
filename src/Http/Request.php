@@ -111,7 +111,7 @@ class Request extends BaseRequest
 
     public function isNotUserResponse(): bool
     {
-        return $this->isTimeout() || $this->isReleased();
+        return $this->isInitial() || $this->isTimeout() || $this->isReleased();
     }
 
     public function isNotReleased(): bool
