@@ -196,9 +196,10 @@ abstract class Screen
     public static function handle(Request $request)
     {
         $screen = static::getInstance($request);
-        TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
 
         if ($request->isInitial() || $request->isTimeout()) return $screen->render();
+
+        TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
 
         return $screen->execute();
     }
@@ -250,7 +251,7 @@ abstract class Screen
     private function makeTrail(): void
     {
 
-        if ($this instanceof Error) return;
+        if ($this instanceof Error || $this->request->isTimeout()) return;
 
         if ($this->request->trail) $this->request->trail->mark(static::class);
     }
