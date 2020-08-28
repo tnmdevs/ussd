@@ -104,6 +104,11 @@ class Request extends BaseRequest
         return $this->type == self::TIMEOUT;
     }
 
+    public function isNotTimeout(): bool
+    {
+        return !$this->isTimeout();
+    }
+
     private function getTrail(): Session
     {
         $existingSession = $this->getExistingSession();

@@ -68,7 +68,10 @@ abstract class Screen
     public static function getInstance(Request $request): Screen
     {
         if (!$request->trail->{'state'}) return new Welcome($request);
-        return new $request->trail->{'state'}($request);
+        /** @var Screen $screen */
+        $screen = new $request->trail->{'state'}($request);
+
+        return ($request->isNotTimeout()) ? $screen : $screen->previous();
     }
 
     /**
