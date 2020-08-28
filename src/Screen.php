@@ -202,10 +202,7 @@ abstract class Screen
 
         TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
 
-        if ($request->isInitial()) return $screen->render();
-
-        if ($request->isTimeout() || $request->isReleased()) return $screen->previous()->render();
-
+        if ($request->isNotResponse()) return $screen->render();
 
         return $screen->execute();
     }
