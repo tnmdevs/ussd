@@ -104,6 +104,16 @@ class Request extends BaseRequest
         return $this->type == self::TIMEOUT;
     }
 
+    public function isReleased(): bool
+    {
+        return $this->type == self::RELEASE;
+    }
+
+    public function isNotReleased(): bool
+    {
+        return !$this->isReleased();
+    }
+
     public function isNotTimeout(): bool
     {
         return !$this->isTimeout();

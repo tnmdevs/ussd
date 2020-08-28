@@ -71,7 +71,7 @@ abstract class Screen
         /** @var Screen $screen */
         $screen = new $request->trail->{'state'}($request);
 
-        return ($request->isNotTimeout()) ? $screen : $screen->previous();
+        return ($request->isNotTimeout() && $request->isNotReleased()) ? $screen : $screen->previous();
     }
 
     /**
@@ -200,11 +200,12 @@ abstract class Screen
     {
         $screen = static::getInstance($request);
 
+        TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
+
         if ($request->isInitial()) return $screen->render();
 
-        if ($request->isTimeout()) return $screen->previous()->render();
+        if ($request->isTimeout() || $request->isReleased()) return $screen->previous()->render();
 
-        TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
 
         return $screen->execute();
     }
@@ -255,8 +256,7 @@ abstract class Screen
 
     private function makeTrail(): void
     {
-
-        if ($this instanceof Error || $this->request->isTimeout()) return;
+        if ($this instanceof Error || $this->request->isTimeout() || $this->request->isReleased()) return;
 
         if ($this->request->trail) $this->request->trail->mark(static::class);
     }
