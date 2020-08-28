@@ -19,6 +19,6 @@ class PayloadObserver
 
     private function createHistoricalRecord(Payload $payload): void
     {
-        HistoricalPayload::updateOrCreate(['id' => $payload->getKey()], $payload->toArray());
+        HistoricalPayload::updateOrCreate(['id' => $payload->getKey()], $payload->only(['session_id', 'key', 'value']));
     }
 }

@@ -36,7 +36,9 @@ class SessionObserver
 
     private function createHistoricalRecord(Session $session): void
     {
-        HistoricalSession::updateOrCreate(['id' => $session->getKey()], $session->toArray());
+        HistoricalSession::updateOrCreate(['id' => $session->getKey()],
+            $session->only(['session_id', 'state', 'locale', 'msisdn'])
+        );
     }
 
     /**

@@ -35,7 +35,9 @@ class TransactionTrailObserver
      */
     private function createHistoricalRecord(TransactionTrail $transactionTrail): void
     {
-        HistoricalTransactionTrail::updateOrCreate(['id' => $transactionTrail->getKey()], $transactionTrail->toArray());
+        HistoricalTransactionTrail::updateOrCreate(['id' => $transactionTrail->getKey()],
+            $transactionTrail->only(['session_id', 'message', 'response'])
+        );
     }
 
 }
