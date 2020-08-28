@@ -48,6 +48,7 @@ class SessionObserver
     {
         SessionNumber::updateOrCreate(['msisdn' => $session->{'msisdn'}, 'ussd_session' => $session->{'session_id'}], [
             'last_screen' => $session->{'state'},
+            'session_id' => $session->getKey(),
             'msisdn' => $session->{'msisdn'},
             'ussd_session' => $session->{'session_id'},
         ]);
