@@ -11,7 +11,7 @@ use TNM\USSD\Screen;
 
 class Request extends BaseRequest
 {
-    const INITIAL = 1, RESPONSE = 2;
+    const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
     public $msisdn;
     public $session;
     public $type;
@@ -97,6 +97,11 @@ class Request extends BaseRequest
     public function isResponse(): bool
     {
         return $this->type == self::RESPONSE;
+    }
+
+    public function isTimeout(): bool
+    {
+        return $this->type == self::TIMEOUT;
     }
 
     private function getTrail(): Session
