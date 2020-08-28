@@ -200,7 +200,9 @@ abstract class Screen
     {
         $screen = static::getInstance($request);
 
-        if ($request->isInitial() || $request->isTimeout()) return $screen->render();
+        if ($request->isInitial()) return $screen->render();
+
+        if ($request->isTimeout()) return $screen->previous()->render();
 
         TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
 
