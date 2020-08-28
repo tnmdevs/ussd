@@ -46,6 +46,7 @@ class Request extends BaseRequest
 
     public function toHomeScreen(): bool
     {
+        if ($this->getExistingSession()) return false;
         return $this->isInitial() || $this->message == Screen::HOME;
     }
 
@@ -99,6 +100,9 @@ class Request extends BaseRequest
 
     private function getTrail(): Session
     {
+        $existingSession = $this->getExistingSession();
+        if ($existingSession) return $existingSession->updateSessionId($this->session);
+
         return Session::firstOrCreate(
             ['session_id' => $this->session],
             ['state' => 'App\Screens\Welcome', 'msisdn' => $this->msisdn]
@@ -113,5 +117,10 @@ class Request extends BaseRequest
     public function getPreviousScreen(): Screen
     {
         return $this->getScreen()->previous();
+    }
+
+    public function getExistingSession(): ?Session
+    {
+        return Session::recentSessionByPhone($this->msisdn);
     }
 }

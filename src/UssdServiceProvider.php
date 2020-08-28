@@ -13,8 +13,10 @@ use TNM\USSD\Commands\MonitorPayload;
 use TNM\USSD\Commands\Update;
 use TNM\USSD\Models\Payload;
 use TNM\USSD\Models\Session;
+use TNM\USSD\Models\SessionNumber;
 use TNM\USSD\Models\TransactionTrail;
 use TNM\USSD\Observers\PayloadObserver;
+use TNM\USSD\Observers\SessionNumberObserver;
 use TNM\USSD\Observers\SessionObserver;
 use TNM\USSD\Observers\TransactionTrailObserver;
 
@@ -33,6 +35,7 @@ class UssdServiceProvider extends ServiceProvider
         Payload::observe(PayloadObserver::class);
         TransactionTrail::observe(TransactionTrailObserver::class);
         Session::observe(SessionObserver::class);
+        SessionNumber::observe(SessionNumberObserver::class);
     }
 
     public function register()

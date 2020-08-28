@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use TNM\USSD\Models\Payload;
 use TNM\USSD\Models\Session;
+use TNM\USSD\Models\SessionNumber;
 use TNM\USSD\Models\TransactionTrail;
 
 class CleanUp extends Command
@@ -52,6 +53,8 @@ class CleanUp extends Command
             Session::where('created_at', '<', now()->subMinutes($minutes))->delete();
             TransactionTrail::where('created_at', '<', now()->subMinutes($minutes))->delete();
             Payload::where('created_at', '<', now()->subMinutes($minutes))->delete();
+            SessionNumber::where('created_at', '<', now()->subMinutes($minutes))->delete();
+
         } catch (Exception $exception) {
             $this->error(sprintf("Operation failed: %s", $exception->getMessage()));
         }
