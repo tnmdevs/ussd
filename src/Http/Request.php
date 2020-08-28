@@ -109,9 +109,9 @@ class Request extends BaseRequest
         return $this->type == self::RELEASE;
     }
 
-    public function isNotResponse(): bool
+    public function isNotUserResponse(): bool
     {
-        return $this->isInitial() || $this->isTimeout() || $this->isReleased();
+        return $this->isTimeout() || $this->isReleased();
     }
 
     public function isNotReleased(): bool

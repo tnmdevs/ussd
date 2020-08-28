@@ -68,10 +68,7 @@ abstract class Screen
     public static function getInstance(Request $request): Screen
     {
         if (!$request->trail->{'state'}) return new Welcome($request);
-        /** @var Screen $screen */
-        $screen = new $request->trail->{'state'}($request);
-
-        return ($request->isNotTimeout() && $request->isNotReleased()) ? $screen : $screen->previous();
+        return new $request->trail->{'state'}($request);
     }
 
     /**
@@ -202,7 +199,7 @@ abstract class Screen
 
         TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
 
-        if ($request->isNotResponse()) return $screen->render();
+        if ($request->isNotUserResponse()) return $screen->render();
 
         return $screen->execute();
     }
