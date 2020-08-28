@@ -14,7 +14,8 @@ class AddSessionIdToHistoricalSessionNumbersTable extends Migration
     public function up()
     {
         Schema::table('historical_session_numbers', function (Blueprint $table) {
-            $table->foreignId('session_id')->nullable()->constrained('sessions')->cascadeOnDelete();
+            $table->foreignId('session_id')->after('msisdn')
+                ->nullable()->constrained('sessions')->cascadeOnDelete();
         });
     }
 
