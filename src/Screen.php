@@ -197,6 +197,9 @@ abstract class Screen
     {
         $screen = static::getInstance($request);
         TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
+
+        if ($request->isInitial()) return $screen->render();
+
         return $screen->execute();
     }
 

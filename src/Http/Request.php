@@ -3,6 +3,7 @@
 
 namespace TNM\USSD\Http;
 
+use App\Screens\Welcome;
 use Illuminate\Http\Request as BaseRequest;
 use TNM\USSD\Factories\RequestFactory;
 use TNM\USSD\Models\Session;
@@ -105,7 +106,7 @@ class Request extends BaseRequest
 
         return Session::firstOrCreate(
             ['session_id' => $this->session],
-            ['state' => 'App\Screens\Welcome', 'msisdn' => $this->msisdn]
+            ['state' => Welcome::class, 'msisdn' => $this->msisdn]
         );
     }
 
