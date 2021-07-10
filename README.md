@@ -79,7 +79,7 @@ accessed by other request within the session.
 Request payload can be added by calling `addPayload` method on request's trail object. It takes a key-value pair of 
 parameters. 
 ```php
-$$this->addPayload('key', $this->value());
+$this->addPayload('key', $this->value());
 ```
 #### Retrieving request payload
 ```php
