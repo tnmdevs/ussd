@@ -4,16 +4,15 @@
 namespace TNM\USSD\Http\Flares;
 
 
-use TNM\USSD\Http\UssdResponseInterface;
-use TNM\USSD\Screen;
+use TNM\USSD\Http\XMLResponse;
 
-class FlaresResponse implements UssdResponseInterface
+class FlaresResponse extends XMLResponse
 {
-    public function respond(Screen $screen)
+    protected function getPayload(): array
     {
-        $content = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-        $content .= sprintf("<response><msisdn>%s</msisdn>", $screen->request->msisdn);
-        $content .= sprintf("<applicationResponse>%s</applicationResponse></response>", $screen->getResponseMessage());
-        return $content;
+        return [
+            'msisdn' => $this->screen->request->msisdn,
+            'message' => $this->screen->getResponseMessage(),
+        ];
     }
 }
