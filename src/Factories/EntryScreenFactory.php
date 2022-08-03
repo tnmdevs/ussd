@@ -4,16 +4,12 @@
 namespace TNM\USSD\Factories;
 
 
-use App\Screens\Welcome;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Screen;
 
 class EntryScreenFactory
 {
-    /**
-     * @var Request
-     */
-    private $request;
+    private Request $request;
 
     public function __construct(Request $request)
     {
@@ -22,7 +18,12 @@ class EntryScreenFactory
 
     public function make()
     {
-        if ($this->request->toHomeScreen()) return (new Welcome($this->request))->render();
+        if ($this->request->toHomeScreen()) {
+            $screen = config('ussd.routing.landing_screen');
+            /** @var Screen $screen */
+            $instance = new $screen($this->request);
+            return $instance->render();
+        }
 
         if ($this->request->toPreviousScreen()) return $this->request->getPreviousScreen()->render();
 
