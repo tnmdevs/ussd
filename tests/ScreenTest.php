@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
-use Tests\TestCase;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Http\TruRoute\TruRouteRequest;
 use TNM\USSD\Screen;

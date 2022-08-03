@@ -14,12 +14,12 @@ class CreateHistoricalSessionsTable extends Migration
     public function up()
     {
         Schema::create('historical_sessions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('session_id');
+            $table->id();
+            $table->bigInteger('session_id')->index();
             $table->string('state');
             $table->longText('payload')->nullable();
             $table->string('locale')->nullable();
-            $table->string('msisdn');
+            $table->bigInteger('msisdn')->index();
             $table->timestamps();
         });
     }

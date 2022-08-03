@@ -2,8 +2,8 @@
 
 namespace TNM\USSD\Test;
 
-use Config;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use TNM\USSD\UssdServiceProvider;
 
