@@ -11,13 +11,13 @@ class Controller extends BaseController
 {
     /**
      * @param Request $request
-     * @return mixed|string
+     * @return mixed
      * @throws UssdException
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): mixed
     {
-        if ($request->invalid())
-            throw new UssdException($request, 'The system could not process your request. Please try again later');
+        if ($request->isInvalid())
+            throw new UssdException($request, 'The system could not process your request');
 
         return (new EntryScreenFactory($request))->make();
     }

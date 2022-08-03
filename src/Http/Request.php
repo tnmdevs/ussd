@@ -14,30 +14,17 @@ class Request extends BaseRequest
     const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
     public $msisdn;
     public $session;
-    public $type;
-    /**
-     * @var string $message
-     */
-    public $message;
-    /**
-     * @var Session
-     */
-    public $trail;
-
-    /**
-     * @var bool $valid whether the request is valid XML document or not
-     */
-    private $valid = false;
+    public int $type;
+    public string $message;
+    public Session $trail;
+    private UssdRequestInterface $ussdRequest;
 
     public function __construct()
     {
         parent::__construct();
         $this->setProperties((new RequestFactory())->make());
 
-        if ($this->invalid()) return;
-
-        $this->setSessionLocale();
-        $this->trail = $this->getTrail();
+        $this->setRequestProperties()->setSessionLocale()->setSessionTrail();
     }
 
     public function toPreviousScreen(): bool
@@ -51,9 +38,12 @@ class Request extends BaseRequest
         return $this->isInitial() || $this->message == Screen::HOME;
     }
 
-    public function invalid(): bool
+    public function isInvalid(): bool
     {
-        return !$this->valid;
+        return empty($this->ussdRequest->getMsisdn()) ||
+            empty($this->ussdRequest->getSession()) ||
+            empty($this->ussdRequest->getType()) ||
+            empty($this->ussdRequest->getMessage());
     }
 
     private function setValid(UssdRequestInterface $request): void
