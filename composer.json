@@ -5,17 +5,27 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Saul Chelewani",
+            "email": "saulchelewani@gmail.com"
+        },
+        {
             "name": "TNM Developers",
             "email": "developers@tnm.co.mw"
         }
     ],
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.1.3",
-        "laravel/framework": ">=5.8",
+        "php": "^8.0",
         "ext-json": "*",
         "ext-simplexml": "*",
         "tnmdev/ussd-simulator": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^7.0"
     },
     "autoload": {
         "psr-4": {
