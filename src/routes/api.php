@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => 'TNM\USSD\Http', 'prefix' => 'api/ussd'], function () {
-    Route::post('/{adapter?}', ['uses' => 'Controller']);
-});
+use Illuminate\Support\Facades\Route;
+use TNM\USSD\Http\Controller;
 
+Route::post('/{adapter?}', Controller::class);
