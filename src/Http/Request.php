@@ -12,7 +12,7 @@ use TNM\USSD\Screen;
 class Request extends BaseRequest
 {
     const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
-    public $msisdn;
+    public string $msisdn;
     public $session;
     public int $type;
     public string $message;
@@ -22,7 +22,7 @@ class Request extends BaseRequest
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties((new RequestFactory())->make());
+        $this->ussdRequest = (new RequestFactory())->make();
 
         $this->setRequestProperties()->setSessionLocale()->setSessionTrail();
     }
@@ -46,37 +46,22 @@ class Request extends BaseRequest
             empty($this->ussdRequest->getMessage());
     }
 
-    private function setValid(UssdRequestInterface $request): void
+    private function setRequestProperties(): self
     {
-        if (!$request) {
-            $this->valid = false;
-            return;
-        }
-
-        $this->valid = !empty($request->getMsisdn()) &&
-            !empty($request->getSession()) &&
-            !empty($request->getType()) &&
-            !empty($request->getMessage());
+        $this->msisdn = $this->ussdRequest->getMsisdn();
+        $this->session = $this->ussdRequest->getSession();
+        $this->type = $this->ussdRequest->getType();
+        $this->message = $this->ussdRequest->getMessage();
+        return $this;
     }
 
-    private function setProperties(UssdRequestInterface $request): void
+    private function setSessionLocale(): self
     {
-        $this->setValid($request);
-
-        if ($this->valid) {
-            $this->msisdn = $request->getMsisdn();
-            $this->session = $request->getSession();
-            $this->type = $request->getType();
-            $this->message = $request->getMessage();
-        }
-    }
-
-    private function setSessionLocale(): void
-    {
-        if (Session::notCreated($this->session)) return;
+        if (Session::notCreated($this->session)) return $this;
 
         $session = Session::findBySessionId($this->session);
         app()->setLocale($session->{'locale'});
+        return $this;
     }
 
     public function isInitial(): bool
@@ -138,5 +123,10 @@ class Request extends BaseRequest
     public function getExistingSession(): ?Session
     {
         return Session::recentSessionByPhone($this->msisdn);
+    }
+
+    private function setSessionTrail(): void
+    {
+        $this->trail = $this->getTrail();
     }
 }
