@@ -16,11 +16,6 @@ abstract class Screen
 {
     public Request $request;
 
-    /**
-     * Screen constructor.
-     *
-     * @param Request $request
-     */
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -50,7 +45,7 @@ abstract class Screen
      *
      * @return mixed
      */
-    abstract protected function execute();
+    abstract protected function execute(): mixed;
 
     /**
      * Create an instance of a screen
@@ -70,7 +65,7 @@ abstract class Screen
      * @param bool $assoc
      * @return string|array
      */
-    protected function payload(string $key, bool $assoc = false)
+    protected function payload(string $key, bool $assoc = false): array|string
     {
         $value = $this->request->trail->getPayload($key);
         return ($assoc) ? unserialize($value) : $value;
@@ -96,7 +91,7 @@ abstract class Screen
     public function addPayload(string $key, $value, bool $assoc = false)
     {
         $value = ($assoc && is_array($value)) ? serialize($value) : $value;
-        return $this->request->trail->addPayload($key, $value);
+        $this->request->trail->addPayload($key, $value);
     }
 
     /**
@@ -128,7 +123,7 @@ abstract class Screen
      * Get value equivalent to the selected option
      *
      * @param $value
-     * @return string
+     * @return string|null
      */
     public function getItemAt($value): ?string
     {
@@ -186,7 +181,7 @@ abstract class Screen
      * @param Request $request
      * @return mixed
      */
-    public static function handle(Request $request)
+    public static function handle(Request $request): mixed
     {
         $screen = static::getInstance($request);
 
@@ -248,6 +243,6 @@ abstract class Screen
     {
         if ($this instanceof Error || $this->request->isTimeout() || $this->request->isReleased()) return;
 
-        if ($this->request->trail) $this->request->trail->mark(static::class);
+        $this->request->trail?->mark(static::class);
     }
 }
