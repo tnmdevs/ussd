@@ -14,14 +14,7 @@ use TNM\USSD\Screens\Welcome;
 
 abstract class Screen
 {
-    const PREVIOUS = '#';
-    const HOME = '*';
-    /**
-     * USSD Request object
-     *
-     * @var Request
-     */
-    public $request;
+    public Request $request;
 
     /**
      * Screen constructor.
@@ -218,12 +211,15 @@ abstract class Screen
     {
         if ($this->doesntHaveOptions() || $this->inOptions($this->request->message)) return true;
 
-        return $this->request->message == self::PREVIOUS || $this->request->message == self::HOME;
+        return $this->request->message == config('ussd.navigation.previous')
+            || $this->request->message == config('ussd.navigation.home');
     }
 
     public function inOptions(string $value): bool
     {
-        if ($value == static::HOME || $value == static::PREVIOUS) return true;
+        if ($value == config('ussd.navigation.home') || $value == config('ussd.navigation.previous'))
+            return true;
+
         if (!is_numeric($value)) return false;
         return array_key_exists($value - 1, $this->options());
     }
@@ -236,9 +232,9 @@ abstract class Screen
     private function nav(): string
     {
         return $this->goesBack() ? sprintf("%s %s \n%s %s",
-            Screen::HOME,
+            config('ussd.navigation.home'),
             __("ussd::nav.home"),
-            Screen::PREVIOUS,
+            config('ussd.navigation.previous'),
             __("ussd::nav.back")
         ) : "";
     }

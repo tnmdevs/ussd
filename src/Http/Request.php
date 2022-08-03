@@ -29,13 +29,13 @@ class Request extends BaseRequest
 
     public function toPreviousScreen(): bool
     {
-        return $this->message == Screen::PREVIOUS;
+        return $this->message == config('ussd.navigation.previous');
     }
 
     public function toHomeScreen(): bool
     {
         if ($this->getExistingSession()) return false;
-        return $this->isInitial() || $this->message == Screen::HOME;
+        return $this->isInitial() || $this->message == config('ussd.navigation.home');
     }
 
     public function isInvalid(): bool
