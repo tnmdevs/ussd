@@ -14,16 +14,12 @@ trait HasBundledOptions
 
     private function find(string $find, string $payload, string $using = 'humanized', string $value = null)
     {
-        return Arr::first(unserialize($this->payload($payload)), function (array $array) use ($using, $value) {
-            $value = $value ?: $this->value();
-            return $array[$using] == $value;
-        })[$find];
+        return Arr::first(unserialize($this->payload($payload)),
+            fn(array $array) => $array[$using] == $value ?: $this->value())[$find];
     }
 
-    private function map(string $field, string $payload)
+    private function map(string $field, string $payload): array
     {
-        return array_map(function (array $array) use ($field){
-            return $array[$field];
-        }, $this->payload($payload, true));
+        return array_map(fn(array $array) => $array[$field], $this->payload($payload, true));
     }
 }

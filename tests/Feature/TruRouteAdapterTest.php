@@ -15,8 +15,5 @@ class TruRouteAdapterTest extends TestCase
         $response = $this->call('POST', 'api/ussd', [], [], [], [], $content);
 
         $response->assertOk();
-
-//        $response->assertOk();
-//        $response->dd();
     }
 }

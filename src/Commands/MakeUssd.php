@@ -9,7 +9,7 @@ class MakeUssd extends Command
     /**
      * @var string
      */
-    private $contents;
+    private string $contents;
     /**
      * The name and signature of the console command.
      *
@@ -56,7 +56,7 @@ class MakeUssd extends Command
         $this->info('Created screen successfully.');
     }
 
-    public function getStub()
+    public function getStub(): string
     {
         return __DIR__ . '/../stubs/screen.stub';
     }

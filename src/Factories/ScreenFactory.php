@@ -9,14 +9,8 @@ use TNM\USSD\Screen;
 
 abstract class ScreenFactory
 {
-    /**
-     * @var Request
-     */
-    protected $request;
-    /**
-     * @var string
-     */
-    protected $value;
+    protected Request $request;
+    protected string $value;
 
     public function __construct(Screen $screen)
     {
