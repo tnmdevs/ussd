@@ -12,11 +12,9 @@ class RequestFactory
 {
     public function make(): UssdRequestInterface
     {
-        switch (request()->route('adapter')) {
-            case 'flares' :
-                return resolve(FlaresRequest::class);
-            default:
-                return resolve(TruRouteRequest::class);
-        }
+        return match (request()->route('adapter')) {
+            'flares' => resolve(FlaresRequest::class),
+            default => resolve(TruRouteRequest::class),
+        };
     }
 }
