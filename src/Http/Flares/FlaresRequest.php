@@ -10,10 +10,7 @@ use TNM\USSD\Models\Session;
 
 class FlaresRequest implements UssdRequestInterface
 {
-    /**
-     * @var array
-     */
-    private $request;
+    private mixed $request;
 
     public function __construct()
     {

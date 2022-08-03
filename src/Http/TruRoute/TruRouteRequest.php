@@ -8,10 +8,7 @@ use TNM\USSD\Http\UssdRequestInterface;
 
 class TruRouteRequest implements UssdRequestInterface
 {
-    /**
-     * @var array
-     */
-    private $request;
+    private mixed $request;
 
     public function __construct()
     {

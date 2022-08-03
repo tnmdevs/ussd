@@ -23,7 +23,7 @@ class ValidationFailure extends Error
      *
      * @return mixed
      */
-    protected function execute()
+    protected function execute(): mixed
     {
         // TODO: Implement execute() method.
     }
