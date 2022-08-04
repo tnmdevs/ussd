@@ -6,7 +6,6 @@ namespace TNM\USSD\Http;
 
 use Exception;
 use Illuminate\Support\Facades\Validator;
-use TNM\USSD\Exceptions\UssdException;
 use TNM\USSD\Exceptions\ValidationException;
 
 trait Validates
@@ -24,9 +23,9 @@ trait Validates
      * Validate request data against given rules
      *
      * @param Request $request
-     * @param string|null $label
+     * @param string $label
      * @return bool
-     * @throws UssdException
+     * @throws ValidationException
      * @throws Exception
      */
     protected function validate(Request $request, string $label = 'value'): bool

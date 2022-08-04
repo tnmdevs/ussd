@@ -9,9 +9,9 @@ abstract class AbstractSession extends Model
 {
     protected $guarded = [];
 
-    public static function findBySessionId(string $session): Session
+    public static function findBySessionId(string $session): ?Session
     {
-        return static::where('session_id', $session)->firstOrFail();
+        return static::where('session_id', $session)->first();
     }
 
     public static function findByPhoneNumber(string $phone): Collection

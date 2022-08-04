@@ -8,10 +8,7 @@ use TNM\USSD\Http\UssdRequestInterface;
 
 class TruRouteRequest implements UssdRequestInterface
 {
-    /**
-     * @var array
-     */
-    private $request;
+    private mixed $request;
 
     public function __construct()
     {
@@ -23,9 +20,9 @@ class TruRouteRequest implements UssdRequestInterface
         return $this->request['msisdn'];
     }
 
-    public function getSession(): string
+    public function getSession(): ?string
     {
-        return $this->request['sessionid'];
+        return $this->request['sessionid'] ?? null;
     }
 
     public function getType(): int

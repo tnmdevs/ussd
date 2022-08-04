@@ -3,7 +3,6 @@
 
 namespace TNM\USSD\Http;
 
-use App\Screens\Welcome;
 use Illuminate\Http\Request as BaseRequest;
 use TNM\USSD\Factories\RequestFactory;
 use TNM\USSD\Models\Session;
@@ -12,81 +11,57 @@ use TNM\USSD\Screen;
 class Request extends BaseRequest
 {
     const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
-    public $msisdn;
+    public string $msisdn = '';
     public $session;
-    public $type;
-    /**
-     * @var string $message
-     */
-    public $message;
-    /**
-     * @var Session
-     */
-    public $trail;
-
-    /**
-     * @var bool $valid whether the request is valid XML document or not
-     */
-    private $valid = false;
+    public int $type;
+    public string $message;
+    public Session $trail;
+    private UssdRequestInterface $ussdRequest;
 
     public function __construct()
     {
         parent::__construct();
-        $this->setProperties((new RequestFactory())->make());
+        $this->ussdRequest = (new RequestFactory())->make();
 
-        if ($this->invalid()) return;
-
-        $this->setSessionLocale();
-        $this->trail = $this->getTrail();
+        if ($this->isInvalid()) return;
+        $this->setRequestProperties()->setSessionLocale()->setSessionTrail();
     }
 
     public function toPreviousScreen(): bool
     {
-        return $this->message == Screen::PREVIOUS;
+        return $this->message == config('ussd.navigation.previous');
     }
 
     public function toHomeScreen(): bool
     {
         if ($this->getExistingSession()) return false;
-        return $this->isInitial() || $this->message == Screen::HOME;
+        return $this->isInitial() || $this->message == config('ussd.navigation.home');
     }
 
-    public function invalid(): bool
+    public function isInvalid(): bool
     {
-        return !$this->valid;
+        return empty($this->ussdRequest->getMsisdn()) ||
+            empty($this->ussdRequest->getSession()) ||
+            empty($this->ussdRequest->getType()) ||
+            empty($this->ussdRequest->getMessage());
     }
 
-    private function setValid(UssdRequestInterface $request): void
+    private function setRequestProperties(): self
     {
-        if (!$request) {
-            $this->valid = false;
-            return;
-        }
-
-        $this->valid = !empty($request->getMsisdn()) &&
-            !empty($request->getSession()) &&
-            !empty($request->getType()) &&
-            !empty($request->getMessage());
+        $this->msisdn = $this->ussdRequest->getMsisdn();
+        $this->session = $this->ussdRequest->getSession();
+        $this->type = $this->ussdRequest->getType();
+        $this->message = $this->ussdRequest->getMessage();
+        return $this;
     }
 
-    private function setProperties(UssdRequestInterface $request): void
+    private function setSessionLocale(): self
     {
-        $this->setValid($request);
-
-        if ($this->valid) {
-            $this->msisdn = $request->getMsisdn();
-            $this->session = $request->getSession();
-            $this->type = $request->getType();
-            $this->message = $request->getMessage();
-        }
-    }
-
-    private function setSessionLocale(): void
-    {
-        if (Session::notCreated($this->session)) return;
+        if (empty($this->session) || Session::notCreated($this->session)) return $this;
 
         $session = Session::findBySessionId($this->session);
         app()->setLocale($session->{'locale'});
+        return $this;
     }
 
     public function isInitial(): bool
@@ -131,7 +106,7 @@ class Request extends BaseRequest
 
         return Session::firstOrCreate(
             ['session_id' => $this->session],
-            ['state' => Welcome::class, 'msisdn' => $this->msisdn]
+            ['state' => config('ussd.routing.landing_screen'), 'msisdn' => $this->msisdn]
         );
     }
 
@@ -148,5 +123,10 @@ class Request extends BaseRequest
     public function getExistingSession(): ?Session
     {
         return Session::recentSessionByPhone($this->msisdn);
+    }
+
+    private function setSessionTrail(): void
+    {
+        $this->trail = $this->getTrail();
     }
 }

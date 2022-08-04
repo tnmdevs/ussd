@@ -4,16 +4,20 @@
 namespace TNM\USSD\Http\TruRoute;
 
 
-use TNM\USSD\Http\UssdResponseInterface;
-use TNM\USSD\Screen;
+use TNM\USSD\Http\XMLResponse;
 
-class TruRouteResponse implements UssdResponseInterface
+class TruRouteResponse extends XMLResponse
 {
-    public function respond(Screen $screen)
+    protected function getPayload(): array
     {
-        return sprintf(
-            "<ussd><type>%s</type><msg>%s</msg><premium><cost>0</cost><ref>NULL</ref></premium></ussd>",
-            $screen->type(), $screen->getResponseMessage()
-        );
+        return [
+            'type' => $this->screen->type(),
+            'message' => $this->screen->getResponseMessage(),
+        ];
+    }
+
+    protected function getTemplate(): string
+    {
+        return __DIR__ . '/response.xml';
     }
 }

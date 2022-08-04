@@ -15,7 +15,7 @@ class CreateTransactionTrailsTable extends Migration
     {
         Schema::create('transaction_trails', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('session_id');
+            $table->foreignId('session_id')->index();
             $table->string('message');
             $table->string('response');
             $table->timestamps();

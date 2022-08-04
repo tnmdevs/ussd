@@ -7,12 +7,9 @@ use TNM\USSD\Screens\ValidationFailure;
 
 class ValidationException extends UssdException
 {
-    /**
-     * @var Request
-     */
-    protected $request;
+    protected Request $request;
 
-    public function render()
+    public function render(): string
     {
         return (new ValidationFailure($this->request, $this->getMessage()))->render();
     }

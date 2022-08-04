@@ -2,6 +2,7 @@
 
 namespace TNM\USSD;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use TNM\USSD\Commands\AuditSession;
 use TNM\USSD\Commands\CleanUp;
@@ -24,7 +25,7 @@ class UssdServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+        $this->registerRoutes();
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
         $this->loadTranslationsFrom(__DIR__ . '/translations', 'ussd');
 
@@ -40,6 +41,21 @@ class UssdServiceProvider extends ServiceProvider
         TransactionTrail::observe(TransactionTrailObserver::class);
         Session::observe(SessionObserver::class);
         SessionNumber::observe(SessionNumberObserver::class);
+    }
+
+    protected function registerRoutes()
+    {
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+        });
+    }
+
+    protected function routeConfiguration(): array
+    {
+        return [
+            'prefix' => config('ussd.routing.prefix'),
+            'middleware' => config('ussd.routing.middleware'),
+        ];
     }
 
     public function register()

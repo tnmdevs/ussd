@@ -6,9 +6,9 @@ use Illuminate\Console\Command;
 
 class MakeScreenFactory extends Command
 {
-    private $path = "/Factories";
-    private $onExists = "Factory already exists!";
-    private $onCreated = 'Created factory successfully.';
+    private string $path = "/Factories";
+    private string $onExists = "Factory already exists!";
+    private string $onCreated = 'Created factory successfully.';
 
     /**
      * The name and signature of the console command.
@@ -52,12 +52,12 @@ class MakeScreenFactory extends Command
         $this->info($this->onCreated);
     }
 
-    private function getStub()
+    private function getStub(): string
     {
         return __DIR__ . '/../stubs/factory.stub';
     }
 
-    private function replaceClassName()
+    private function replaceClassName(): array|bool|string
     {
         return str_replace('{{class}}', $this->argument('name'), file_get_contents($this->getStub()));
     }

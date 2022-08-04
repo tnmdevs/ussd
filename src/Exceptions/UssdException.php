@@ -4,15 +4,13 @@
 namespace TNM\USSD\Exceptions;
 
 
+use Exception;
 use TNM\USSD\Http\Request;
 use TNM\USSD\Screens\Error;
 
-class UssdException extends \Exception
+class UssdException extends Exception
 {
-    /**
-     * @var Request
-     */
-    protected $request;
+    protected Request $request;
 
     public function __construct(Request $request, string $message)
     {
@@ -20,7 +18,7 @@ class UssdException extends \Exception
         $this->request = $request;
     }
 
-    public function render()
+    public function render(): string
     {
         return (new Error($this->request, $this->getMessage()))->render();
     }

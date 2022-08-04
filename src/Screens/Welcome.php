@@ -16,7 +16,7 @@ class Welcome extends Screen
      */
     protected function message(): string
     {
-        return config('ussd.welcome');
+        return config('ussd.default.welcome');
     }
 
     /**
@@ -25,7 +25,7 @@ class Welcome extends Screen
      */
     protected function options(): array
     {
-        return config('ussd.options');
+        return config('ussd.default.options');
     }
 
     /**
@@ -33,7 +33,7 @@ class Welcome extends Screen
      *
      * @return mixed
      */
-    protected function execute()
+    protected function execute(): mixed
     {
         // TODO: Implement execute() method.
     }

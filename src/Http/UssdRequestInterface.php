@@ -6,11 +6,11 @@ namespace TNM\USSD\Http;
 
 interface UssdRequestInterface
 {
-    public function getMsisdn(): string;
+    public function getMsisdn(): ?string;
 
-    public function getSession(): string;
+    public function getSession(): ?string;
 
-    public function getType(): int;
+    public function getType(): ?int;
 
-    public function getMessage(): string;
+    public function getMessage(): ?string;
 }

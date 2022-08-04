@@ -1,0 +1,6 @@
+<ussd>
+    <msisdn>{{msisdn}}</msisdn>
+    <sessionid>{{session_id}}</sessionid>
+    <type>{{type}}</type>
+    <msg>{{message}}</msg>
+</ussd>

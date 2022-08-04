@@ -1,0 +1,8 @@
+<ussd>
+    <type>{{type}}</type>
+    <msg>{{message}}</msg>
+    <premium>
+        <cost>0</cost>
+        <ref>NULL</ref>
+    </premium>
+</ussd>

@@ -15,7 +15,7 @@ class CreateSessionNumbersTable extends Migration
     {
         Schema::create('session_numbers', function (Blueprint $table) {
             $table->id();
-            $table->string('msisdn');
+            $table->bigInteger('msisdn')->index();
             $table->string('ussd_session');
             $table->string('last_screen');
             $table->timestamps();

@@ -5,7 +5,6 @@ namespace TNM\USSD\Screens;
 
 
 use TNM\USSD\Http\Request;
-use TNM\USSD\Http\Response;
 use TNM\USSD\Screen;
 
 class Error extends Screen
@@ -16,7 +15,7 @@ class Error extends Screen
         $this->message = $message;
     }
 
-    protected $message;
+    protected string $message;
 
     /**
      * Add message to the screen
@@ -51,7 +50,7 @@ class Error extends Screen
      *
      * @return mixed
      */
-    protected function execute()
+    protected function execute(): mixed
     {
         // TODO: Implement execute() method.
     }

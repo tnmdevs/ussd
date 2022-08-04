@@ -15,7 +15,7 @@ class CreateHistoricalPayloadsTable extends Migration
     {
         Schema::create('historical_payloads', function (Blueprint $table) {
             $table->id();
-            $table->string('session_id');
+            $table->foreignId('session_id')->index();
             $table->string('key');
             $table->longText('value');
             $table->timestamps();

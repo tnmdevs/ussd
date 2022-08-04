@@ -10,24 +10,11 @@ use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
 use TNM\USSD\Models\TransactionTrail;
 use TNM\USSD\Screens\Error;
-use TNM\USSD\Screens\Welcome;
 
 abstract class Screen
 {
-    const PREVIOUS = '#';
-    const HOME = '*';
-    /**
-     * USSD Request object
-     *
-     * @var Request
-     */
-    public $request;
+    public Request $request;
 
-    /**
-     * Screen constructor.
-     *
-     * @param Request $request
-     */
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -57,7 +44,7 @@ abstract class Screen
      *
      * @return mixed
      */
-    abstract protected function execute();
+    abstract protected function execute(): mixed;
 
     /**
      * Create an instance of a screen
@@ -67,7 +54,10 @@ abstract class Screen
      */
     public static function getInstance(Request $request): Screen
     {
-        if (!$request->trail->{'state'}) return new Welcome($request);
+        $screen = config('ussd.routing.landing_screen');
+        /** @var Screen $screen */
+        $instance = new $screen($request);
+        if (!$request->trail->{'state'}) return $instance;
         return new $request->trail->{'state'}($request);
     }
 
@@ -77,7 +67,7 @@ abstract class Screen
      * @param bool $assoc
      * @return string|array
      */
-    protected function payload(string $key, bool $assoc = false)
+    protected function payload(string $key, bool $assoc = false): array|string
     {
         $value = $this->request->trail->getPayload($key);
         return ($assoc) ? unserialize($value) : $value;
@@ -103,7 +93,7 @@ abstract class Screen
     public function addPayload(string $key, $value, bool $assoc = false)
     {
         $value = ($assoc && is_array($value)) ? serialize($value) : $value;
-        return $this->request->trail->addPayload($key, $value);
+        $this->request->trail->addPayload($key, $value);
     }
 
     /**
@@ -135,7 +125,7 @@ abstract class Screen
      * Get value equivalent to the selected option
      *
      * @param $value
-     * @return string
+     * @return string|null
      */
     public function getItemAt($value): ?string
     {
@@ -193,7 +183,7 @@ abstract class Screen
      * @param Request $request
      * @return mixed
      */
-    public static function handle(Request $request)
+    public static function handle(Request $request): mixed
     {
         $screen = static::getInstance($request);
 
@@ -218,12 +208,15 @@ abstract class Screen
     {
         if ($this->doesntHaveOptions() || $this->inOptions($this->request->message)) return true;
 
-        return $this->request->message == self::PREVIOUS || $this->request->message == self::HOME;
+        return $this->request->message == config('ussd.navigation.previous')
+            || $this->request->message == config('ussd.navigation.home');
     }
 
     public function inOptions(string $value): bool
     {
-        if ($value == static::HOME || $value == static::PREVIOUS) return true;
+        if ($value == config('ussd.navigation.home') || $value == config('ussd.navigation.previous'))
+            return true;
+
         if (!is_numeric($value)) return false;
         return array_key_exists($value - 1, $this->options());
     }
@@ -236,9 +229,9 @@ abstract class Screen
     private function nav(): string
     {
         return $this->goesBack() ? sprintf("%s %s \n%s %s",
-            Screen::HOME,
+            config('ussd.navigation.home'),
             __("ussd::nav.home"),
-            Screen::PREVIOUS,
+            config('ussd.navigation.previous'),
             __("ussd::nav.back")
         ) : "";
     }
@@ -252,6 +245,6 @@ abstract class Screen
     {
         if ($this instanceof Error || $this->request->isTimeout() || $this->request->isReleased()) return;
 
-        if ($this->request->trail) $this->request->trail->mark(static::class);
+        $this->request->trail?->mark(static::class);
     }
 }
