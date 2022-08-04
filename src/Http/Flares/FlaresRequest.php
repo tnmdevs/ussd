@@ -29,7 +29,7 @@ class FlaresRequest implements UssdRequestInterface
 
     public function getType(): int
     {
-        return Session::findBySessionId($this->getSession())->exists() ? Request::RESPONSE : Request::INITIAL;
+        return Session::findBySessionId($this->getSession()) ? Request::RESPONSE : Request::INITIAL;
     }
 
     public function getMessage(): string

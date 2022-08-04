@@ -12,17 +12,7 @@ class TruRouteAdapterTest extends TestCase
     {
         $content = (new TruRouteRequest('Welcome'))->render();
 
-        $response = $this->call('POST', 'api/ussd', [], [], [], [], $content);
-
-        $response->assertOk();
-        $response->assertSeeText('Welcome to the USSD App');
-    }
-
-    public function test_send_request_to_flares_adapter()
-    {
-        $content = (new TruRouteRequest('Welcome'))->render();
-
-        $response = $this->call('POST', 'api/ussd/flares', [], [], [], [], $content);
+        $response = $this->call('POST', 'api/ussd/main', [], [], [], [], $content);
 
         $response->assertOk();
         $response->assertSeeText('Welcome to the USSD App');

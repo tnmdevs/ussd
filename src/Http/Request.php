@@ -47,6 +47,7 @@ class Request extends BaseRequest
 
     private function setRequestProperties(): self
     {
+
         $this->msisdn = $this->ussdRequest->getMsisdn();
         $this->session = $this->ussdRequest->getSession();
         $this->type = $this->ussdRequest->getType();

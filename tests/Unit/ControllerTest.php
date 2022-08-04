@@ -1,6 +1,6 @@
 <?php
 
-namespace TNM\USSD\Http\Test\Unit;
+namespace TNM\USSD\Test\Unit;
 
 use TNM\USSD\Test\TestCase;
 
