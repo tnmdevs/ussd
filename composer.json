@@ -21,11 +21,13 @@
         "php": "^8.0",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "tnmdev/ussd-simulator": "dev-master"
+        "tnmdev/ussd-simulator": "dev-master",
+        "tnmdev/msisdn-helpers": "dev-main"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
-        "orchestra/testbench": "^7.0"
+        "orchestra/testbench": "^7.0",
+        "tnmdev/utils": "@dev"
     },
     "autoload": {
         "psr-4": {

@@ -15,10 +15,7 @@ class ScreenTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @var LegacyMockInterface|MockInterface|Request
-     */
-    private $request;
+    private LegacyMockInterface|Request|MockInterface $request;
 
     protected function setUp(): void
     {

@@ -15,4 +15,9 @@ class FlaresResponse extends XMLResponse
             'message' => $this->screen->getResponseMessage(),
         ];
     }
+
+    protected function getTemplate(): string
+    {
+        return __DIR__ . '/response.xml';
+    }
 }

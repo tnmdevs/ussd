@@ -10,7 +10,6 @@ use TNM\USSD\Http\Request;
 use TNM\USSD\Http\Response;
 use TNM\USSD\Models\TransactionTrail;
 use TNM\USSD\Screens\Error;
-use TNM\USSD\Screens\Welcome;
 
 abstract class Screen
 {
@@ -55,7 +54,10 @@ abstract class Screen
      */
     public static function getInstance(Request $request): Screen
     {
-        if (!$request->trail->{'state'}) return new Welcome($request);
+        $screen = config('ussd.routing.landing_screen');
+        /** @var Screen $screen */
+        $instance = new $screen($request);
+        if (!$request->trail->{'state'}) return $instance;
         return new $request->trail->{'state'}($request);
     }
 
