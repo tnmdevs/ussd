@@ -1,11 +1,11 @@
 <?php
 
-namespace TNM\USSD\Test;
+namespace TNM\USSD\Test\Requests;
 
 use JetBrains\PhpStorm\Pure;
 use TNM\Utils\Factories\KeyFactory;
 
-class TruRouteRequest
+class TruRouteTestRequest extends XMLRequest
 {
     private string $msisdn;
     private int $type;
@@ -21,20 +21,18 @@ class TruRouteRequest
         $this->message = $message;
     }
 
-    public function render(): string
+    function getTemplate(): string
     {
-        $content = file_get_contents(__DIR__ . '/tru.route.request.xml');
-        $payload = [
+        return file_get_contents(__DIR__ . '/tru.route.request.xml');
+    }
+
+    function getPayload(): array
+    {
+        return [
             'msisdn' => $this->msisdn,
             'session_id' => $this->session,
             'type' => $this->type,
             'message' => $this->message,
         ];
-
-        foreach ($payload as $placeholder => $value)
-            $content = str_replace(sprintf('{{%s}}', $placeholder), $value, $content);
-
-        return $content;
     }
-
 }

@@ -2,15 +2,15 @@
 
 namespace TNM\USSD\Test\Unit;
 
-use TNM\USSD\Test\FlaresRequest;
+use TNM\USSD\Test\Requests\FlaresTestRequest;
+use TNM\USSD\Test\Requests\TruRouteTestRequest;
 use TNM\USSD\Test\TestCase;
-use TNM\USSD\Test\TruRouteRequest;
 
 class ControllerTest extends TestCase
 {
-    public function test_throws_if_request_is_invalid()
+    public function test_throws_if_tru_route_request_is_invalid()
     {
-        $content = (new FlaresRequest('Welcome'))->render();
+        $content = (new FlaresTestRequest('Welcome'))->make();
 
         $response = $this->call('POST', 'api/ussd', [], [], [], [], $content);
 
@@ -20,7 +20,7 @@ class ControllerTest extends TestCase
 
     public function test_throws_if_flares_request_is_invalid()
     {
-        $content = (new TruRouteRequest('Welcome'))->render();
+        $content = (new TruRouteTestRequest('Welcome'))->make();
 
         $response = $this->call('POST', 'api/ussd/flares', [], [], [], [], $content);
 
