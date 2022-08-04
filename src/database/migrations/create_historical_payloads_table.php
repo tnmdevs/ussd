@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSessionNumbersTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,11 +12,11 @@ class CreateSessionNumbersTable extends Migration
      */
     public function up()
     {
-        Schema::create('session_numbers', function (Blueprint $table) {
+        Schema::create('historical_payloads', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('msisdn')->index();
-            $table->string('ussd_session');
-            $table->string('last_screen');
+            $table->foreignId('session_id')->index();
+            $table->string('key');
+            $table->longText('value');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateSessionNumbersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('session_numbers');
+        Schema::dropIfExists('historical_payloads');
     }
-}
+};

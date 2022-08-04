@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHistoricalTransactionTrailsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,7 +12,7 @@ class CreateHistoricalTransactionTrailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('historical_transaction_trails', function (Blueprint $table) {
+        Schema::create('transaction_trails', function (Blueprint $table) {
             $table->id();
             $table->foreignId('session_id')->index();
             $table->string('message');
@@ -29,6 +28,6 @@ class CreateHistoricalTransactionTrailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('historical_transaction_trails');
+        Schema::dropIfExists('transaction_trails');
     }
-}
+};
