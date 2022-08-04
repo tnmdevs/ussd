@@ -11,7 +11,7 @@ use TNM\USSD\Screen;
 class Request extends BaseRequest
 {
     const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
-    public string $msisdn;
+    public string $msisdn = '';
     public $session;
     public int $type;
     public string $message;
@@ -23,6 +23,7 @@ class Request extends BaseRequest
         parent::__construct();
         $this->ussdRequest = (new RequestFactory())->make();
 
+        if ($this->isInvalid()) return;
         $this->setRequestProperties()->setSessionLocale()->setSessionTrail();
     }
 
@@ -47,7 +48,6 @@ class Request extends BaseRequest
 
     private function setRequestProperties(): self
     {
-
         $this->msisdn = $this->ussdRequest->getMsisdn();
         $this->session = $this->ussdRequest->getSession();
         $this->type = $this->ussdRequest->getType();
@@ -57,7 +57,7 @@ class Request extends BaseRequest
 
     private function setSessionLocale(): self
     {
-        if (Session::notCreated($this->session)) return $this;
+        if (empty($this->session) || Session::notCreated($this->session)) return $this;
 
         $session = Session::findBySessionId($this->session);
         app()->setLocale($session->{'locale'});

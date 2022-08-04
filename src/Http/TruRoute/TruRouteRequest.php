@@ -20,9 +20,9 @@ class TruRouteRequest implements UssdRequestInterface
         return $this->request['msisdn'];
     }
 
-    public function getSession(): string
+    public function getSession(): ?string
     {
-        return $this->request['sessionid'];
+        return $this->request['sessionid'] ?? null;
     }
 
     public function getType(): int
