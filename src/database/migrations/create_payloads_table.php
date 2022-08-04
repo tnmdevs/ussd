@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransactionTrailsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,11 +12,11 @@ class CreateTransactionTrailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transaction_trails', function (Blueprint $table) {
+        Schema::create('payloads', function (Blueprint $table) {
             $table->id();
             $table->foreignId('session_id')->index();
-            $table->string('message');
-            $table->string('response');
+            $table->string('key');
+            $table->longText('value');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTransactionTrailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transaction_trails');
+        Schema::dropIfExists('payloads');
     }
-}
+};

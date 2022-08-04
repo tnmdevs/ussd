@@ -25,17 +25,30 @@ class UssdServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $migrations = collect([
+            'create_sessions_table.php',
+            'create_transaction_trails_table.php',
+            'create_payloads_table.php',
+            'create_historical_sessions_table.php',
+            'create_historical_payloads_table.php',
+            'create_historical_transaction_trails_table.php',
+            'create_session_numbers_table.php',
+            'create_historical_session_numbers_table.php',
+        ])->map(fn(string $migration) => [
+            __DIR__ . sprintf('/database/migrations/%s', $migration)
+            => database_path(sprintf('migrations/%s_%s', date('Y_m_d_His', time()), $migration)),
+        ]);
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes($migrations->toArray(), 'migrations');
+        }
         $this->registerRoutes();
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
         $this->loadTranslationsFrom(__DIR__ . '/translations', 'ussd');
 
-        $this->publishes([
-            __DIR__ . '/translations' => resource_path('lang/vendor/ussd'),
-        ]);
+        $this->publishes([__DIR__ . '/translations' => resource_path('lang/vendor/ussd'),]);
 
-        $this->publishes([
-            __DIR__ . '/config/ussd.php' => config_path('ussd.php'),
-        ]);
+        $this->publishes([__DIR__ . '/config/ussd.php' => config_path('ussd.php'),]);
 
         Payload::observe(PayloadObserver::class);
         TransactionTrail::observe(TransactionTrailObserver::class);
@@ -43,14 +56,16 @@ class UssdServiceProvider extends ServiceProvider
         SessionNumber::observe(SessionNumberObserver::class);
     }
 
-    protected function registerRoutes()
+    protected
+    function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function () {
             $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
         });
     }
 
-    protected function routeConfiguration(): array
+    protected
+    function routeConfiguration(): array
     {
         return [
             'prefix' => config('ussd.routing.prefix'),
@@ -58,7 +73,8 @@ class UssdServiceProvider extends ServiceProvider
         ];
     }
 
-    public function register()
+    public
+    function register()
     {
         $this->mergeConfigFrom(
             __DIR__ . '/config/ussd.php', 'ussd'

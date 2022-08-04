@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePayloadsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,11 +12,12 @@ class CreatePayloadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payloads', function (Blueprint $table) {
+        Schema::create('session_numbers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('session_id')->index();
-            $table->string('key');
-            $table->longText('value');
+            $table->bigInteger('msisdn')->index();
+            $table->foreignId('session_id')->nullable()->constrained('sessions')->cascadeOnDelete();
+            $table->string('ussd_session');
+            $table->string('last_screen');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreatePayloadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payloads');
+        Schema::dropIfExists('session_numbers');
     }
-}
+};
