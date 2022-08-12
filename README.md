@@ -204,12 +204,15 @@ class EnterPhoneNumber extends Screen
 
 ### Extending for Multiple Implementations
 
-This adapter was designed with extendability in mind. Right now it supports TruRoute and Flares USSD interfaces used by 
-TNM and Airtel Malawi respectively. However, with the pluggable interface, it can be extended to support any mobile 
+This adapter was designed with extendability in mind. Right now it supports TruRoute and Flares USSD interfaces used by
+TNM and Airtel Malawi respectively. However, with the pluggable interface, it can be extended to support any mobile
 network operator.
 
-To extend, create a request and response class. These classes must implement the `TNM\USSD\Http\UssdRequestInterface` 
-and `TNM\USSD\Http\UssdResponseInterface` respectively.
+To extend, create a request and response class. These classes must implement the `TNM\USSD\Http\UssdRequestInterface`
+and `TNM\USSD\Http\UssdResponseInterface` respectively. The response class has been simplified further that you only
+need to extend the `XMLResponse` class.
+
+```php
 
 Implementation details of the request class may vary. However, we strongly recommend having a constructor that decodes
 the USSD request from the mobile operator into an array that should be assigned to `$request` private property and have 
@@ -238,8 +241,11 @@ class TruRouteRequest implements UssdRequestInterface
     // ...
 }
 ```
+
 ##### Required methods
-The request interface requires you to implement the following methods: 
+
+The request interface requires you to implement the following methods:
+
 * `getSession()` should return the session `id` assigned by the USSD gateway
 * `getMsisdn()` should return the msisdn making a ussd request
 * `getMessage()` should return the message sent with the request
@@ -247,21 +253,43 @@ The request interface requires you to implement the following methods:
 
 #### Example Response Implementation
 
-The following is an example response class implementation. It has one required public method: `respond` which must 
-return a message in a format required by the network operator. 
+The following is an example response class implementation. You will need to add a sample response XML file in your
+response directory. This sample file will be provided to you by the MNO. For TNM and Airtel Malawi, we have you covered.
+
+##### TNM Response XML template
+
+```xml
+<ussd>
+    <type>{{type}}</type>
+    <msg>{{message}}</msg>
+    <premium>
+        <cost>0</cost>
+        <ref>NULL</ref>
+    </premium>
+</ussd>
+
+```
+
+##### TNM Response Class
+
 ```php
 use TNM\USSD\Http\UssdResponseInterface;
 
 use TNM\USSD\Screen;
 
-class TruRouteResponse implements UssdResponseInterface
+class TruRouteResponse extends XMLResponse
 {
-    public function respond(Screen $screen)
+    protected function getPayload(): array
     {
-        return sprintf(
-            "<ussd><type>%s</type><msg>%s</msg><premium><cost>0</cost><ref>NULL</ref></premium></ussd>",
-            $screen->type(), $screen->getResponseMessage()
-        );
+        return [
+            'type' => $this->screen->type(),
+            'message' => $this->screen->getResponseMessage(),
+        ];
+    }
+
+    protected function getTemplate(): string
+    {
+        return __DIR__ . '/response.xml';
     }
 }
 ```
@@ -275,36 +303,34 @@ This is not resolved magically. You are required to define the implementation in
 `TNM\USSD\Factories\ResponseFactory`
 
 ##### Sample Request Factory
+
 ```php
-namespace TNM\USSD\Factories\RequestFactory;
+namespace TNM\USSD\Factories;
 
 class RequestFactory
 {
     public function make(): UssdRequestInterface
     {
-        switch (request()->route('adapter')) {
-            case 'flares' :
-                return resolve(FlaresRequest::class);
-            default:
-                return resolve(TruRouteRequest::class);
-        }
+        return match (request()->route('adapter')) {
+            'flares' => resolve(FlaresRequest::class),
+            default => resolve(TruRouteRequest::class),
+        };
     }
 }
 ```
 ##### Sample Response Factory
+
 ```php
-namespace TNM\USSD\Factories\ResponseFactory;
+namespace TNM\USSD\Factories;
 
 class ResponseFactory
 {
     public function make(): UssdResponseInterface
     {
-        switch (request()->route('adapter')) {
-            case 'flares':
-                return resolve(FlaresResponse::class);
-            default:
-                return resolve(TruRouteResponse::class);
-        }
+        return match (request()->route('adapter')) {
+            'flares' => resolve(FlaresResponse::class),
+            default => resolve(TruRouteResponse::class),
+        };
     }
 }
 ```
