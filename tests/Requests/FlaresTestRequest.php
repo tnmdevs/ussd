@@ -1,38 +1,35 @@
 <?php
 
-namespace TNM\USSD\Test;
+namespace TNM\USSD\Test\Requests;
 
 use JetBrains\PhpStorm\Pure;
 use TNM\Utils\Factories\KeyFactory;
 
-class FlaresRequest
+class FlaresTestRequest extends XMLRequest
 {
     private string $msisdn;
-    private int $type;
     private string $session;
     private string $message;
 
     #[Pure]
     public function __construct(string $message, string $msisdn = null, string $session = null)
     {
-        $this->msisdn = $msisdn ?? sprintf('26588%s', (new KeyFactory(7, true))->make());
+        $this->msisdn = $msisdn ?? sprintf('26599%s', (new KeyFactory(7, true))->make());
         $this->session = $session ?? (new KeyFactory(10, true))->make();
         $this->message = $message;
     }
 
-    public function render(): string
+    function getTemplate(): string
     {
-        $content = file_get_contents(__DIR__ . '/flares.request.xml');
-        $payload = [
+        return file_get_contents(__DIR__ . '/flares.request.xml');
+    }
+
+    function getPayload(): array
+    {
+        return [
             'msisdn' => $this->msisdn,
             'session_id' => $this->session,
             'message' => $this->message,
         ];
-
-        foreach ($payload as $placeholder => $value)
-            $content = str_replace(sprintf('{{%s}}', $placeholder), $value, $content);
-
-        return $content;
     }
-
 }

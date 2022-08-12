@@ -56,16 +56,12 @@ class UssdServiceProvider extends ServiceProvider
         SessionNumber::observe(SessionNumberObserver::class);
     }
 
-    protected
-    function registerRoutes()
+    protected function registerRoutes()
     {
-        Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
-        });
+        Route::group($this->routeConfiguration(), fn() => $this->loadRoutesFrom(__DIR__ . '/routes/api.php'));
     }
 
-    protected
-    function routeConfiguration(): array
+    protected function routeConfiguration(): array
     {
         return [
             'prefix' => config('ussd.routing.prefix'),
@@ -76,9 +72,7 @@ class UssdServiceProvider extends ServiceProvider
     public
     function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/config/ussd.php', 'ussd'
-        );
+        $this->mergeConfigFrom(__DIR__ . '/config/ussd.php', 'ussd');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
