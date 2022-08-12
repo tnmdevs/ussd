@@ -212,14 +212,14 @@ To extend, create a request and response class. These classes must implement the
 and `TNM\USSD\Http\UssdResponseInterface` respectively. The response class has been simplified further that you only
 need to extend the `XMLResponse` class.
 
-```php
-
 Implementation details of the request class may vary. However, we strongly recommend having a constructor that decodes
 the USSD request from the mobile operator into an array that should be assigned to `$request` private property and have 
 the interface methods return their values based on the private property.
 
 #### Example Request Implementation
+
 ```php
+
 use TNM\USSD\Http\UssdRequestInterface;
 
 class TruRouteRequest implements UssdRequestInterface
