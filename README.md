@@ -27,7 +27,8 @@ channel to your API. The interface is open and documentated for implementation w
     + [Session Data CleanUp](#session-data-cleanup)
     + [Example Screen Implementation](#example-screen-implementation)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with
+markdown-toc</a></i></small>
 
 ## Installation
 
@@ -35,14 +36,20 @@ channel to your API. The interface is open and documentated for implementation w
 composer require tnmdev/ussd
 ```
 
+Then publish the package's migrations and config files.
+
+```
+php artisan vendor:publish --provider="TNM\USSD\USSDServiceProvider"
+```
 
 Then install the ussd scaffold. This will also run migrations to create session tracking tables
 
 ```
 php artisan ussd:install
 ```
-Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint. A landing screen will be created 
-for you at `App\Screens\Welcome.php`. 
+
+Once you install the package, the USSD app will be accessible on `/api/ussd` endpoint. A landing screen will be created
+for you at `App\Screens\Welcome.php`.
 
 ## Usage
 
