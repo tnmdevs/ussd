@@ -8,14 +8,13 @@ use TNM\Utils\Factories\KeyFactory;
 class FlaresTestRequest extends XMLRequest
 {
     private string $msisdn;
-    private int $type;
     private string $session;
     private string $message;
 
     #[Pure]
     public function __construct(string $message, string $msisdn = null, string $session = null)
     {
-        $this->msisdn = $msisdn ?? sprintf('26588%s', (new KeyFactory(7, true))->make());
+        $this->msisdn = $msisdn ?? sprintf('26599%s', (new KeyFactory(7, true))->make());
         $this->session = $session ?? (new KeyFactory(10, true))->make();
         $this->message = $message;
     }
