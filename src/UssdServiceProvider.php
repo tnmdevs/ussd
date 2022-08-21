@@ -90,10 +90,8 @@ class UssdServiceProvider extends ServiceProvider
             'create_historical_transaction_trails_table.php',
             'create_session_numbers_table.php',
             'create_historical_session_numbers_table.php',
-        ])->map(fn(string $migration) => [
-            __DIR__ . sprintf('/database/migrations/%s', $migration)
-            => database_path(sprintf('migrations/%s_%s', date('Y_m_d_His', time()), $migration)),
-        ])->each(fn($migration) => $this->migrations[array_keys($migration)[0]] = array_values($migration)[0]);
+        ])->each(fn($migration) => $this->migrations[__DIR__ . sprintf('/database/migrations/%s', $migration)] =
+            database_path(sprintf('migrations/%s_%s', date('Y_m_d_His', time()), $migration)));
 
         return $this->migrations;
     }
