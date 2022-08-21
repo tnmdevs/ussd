@@ -11,7 +11,7 @@ class FlaresAdaptorTest extends TestCase
     {
         $content = (new FlaresTestRequest('Welcome'))->make();
 
-        $response = $this->call('POST', 'api/ussd/flares', [], [], [], [], $content);
+        $response = $this->call(method: 'POST', uri: 'api/ussd/flares', content: $content);
 
         $response->assertOk();
         $response->assertSeeText('Welcome to the USSD App');

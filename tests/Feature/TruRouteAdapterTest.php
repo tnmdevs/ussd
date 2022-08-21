@@ -12,7 +12,7 @@ class TruRouteAdapterTest extends TestCase
     {
         $content = (new TruRouteTestRequest('Welcome'))->make();
 
-        $response = $this->call('POST', 'api/ussd/main', [], [], [], [], $content);
+        $response = $this->call(method: 'POST', uri: 'api/ussd/main', content: $content);
 
         $response->assertOk();
         $response->assertSeeText('Welcome to the USSD App');
