@@ -23,27 +23,19 @@ use TNM\USSD\Observers\TransactionTrailObserver;
 
 class UssdServiceProvider extends ServiceProvider
 {
+    private array $migrations = [];
+
     public function boot()
     {
-        $migrations = collect([
-            'create_sessions_table.php',
-            'create_transaction_trails_table.php',
-            'create_payloads_table.php',
-            'create_historical_sessions_table.php',
-            'create_historical_payloads_table.php',
-            'create_historical_transaction_trails_table.php',
-            'create_session_numbers_table.php',
-            'create_historical_session_numbers_table.php',
-        ])->map(fn(string $migration) => [
-            __DIR__ . sprintf('/database/migrations/%s', $migration)
-            => database_path(sprintf('migrations/%s_%s', date('Y_m_d_His', time()), $migration)),
-        ]);
 
-        if ($this->app->runningInConsole()) {
-            $this->publishes($migrations->toArray(), 'migrations');
-        }
+        if ($this->app->runningInConsole())
+            $this->publishes($this->getMigrations(), 'migrations');
+
         $this->registerRoutes();
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
+        if ($this->app->environment('testing'))
+            $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
         $this->loadTranslationsFrom(__DIR__ . '/translations', 'ussd');
 
         $this->publishes([__DIR__ . '/translations' => resource_path('lang/vendor/ussd'),]);
@@ -69,8 +61,7 @@ class UssdServiceProvider extends ServiceProvider
         ];
     }
 
-    public
-    function register()
+    public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/config/ussd.php', 'ussd');
 
@@ -86,5 +77,24 @@ class UssdServiceProvider extends ServiceProvider
                 Update::class,
             ]);
         }
+    }
+
+    private function getMigrations(): array
+    {
+        collect([
+            'create_sessions_table.php',
+            'create_transaction_trails_table.php',
+            'create_payloads_table.php',
+            'create_historical_sessions_table.php',
+            'create_historical_payloads_table.php',
+            'create_historical_transaction_trails_table.php',
+            'create_session_numbers_table.php',
+            'create_historical_session_numbers_table.php',
+        ])->map(fn(string $migration) => [
+            __DIR__ . sprintf('/database/migrations/%s', $migration)
+            => database_path(sprintf('migrations/%s_%s', date('Y_m_d_His', time()), $migration)),
+        ])->each(fn($migration) => $this->migrations[array_keys($migration)[0]] = array_values($migration)[0]);
+
+        return $this->migrations;
     }
 }
