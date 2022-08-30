@@ -83,13 +83,13 @@ class UssdServiceProvider extends ServiceProvider
     {
         collect([
             'create_sessions_table.php',
+            'create_session_numbers_table.php',
             'create_transaction_trails_table.php',
             'create_payloads_table.php',
             'create_historical_sessions_table.php',
+            'create_historical_session_numbers_table.php',
             'create_historical_payloads_table.php',
             'create_historical_transaction_trails_table.php',
-            'create_session_numbers_table.php',
-            'create_historical_session_numbers_table.php',
         ])->each(fn($migration) => $this->migrations[__DIR__ . sprintf('/database/migrations/%s', $migration)] =
             database_path(sprintf('migrations/%s_%s', date('Y_m_d_His', time()), $migration)));
 
