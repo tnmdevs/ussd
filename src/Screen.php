@@ -130,6 +130,12 @@ abstract class Screen
     public function getItemAt($value): ?string
     {
         if ($this->doesntHaveOptions()) return $value;
+        if (in_array($value, config('ussd.navigation'))) {
+            return match ($value) {
+                config('ussd.navigation.home') => __('ussd::nav.home'),
+                config('ussd.navigation.previous') => __('ussd::nav.back'),
+            };
+        }
         if (!array_key_exists($value - 1, $this->options())) return null;
         return $this->options()[$value - 1];
     }
@@ -229,10 +235,8 @@ abstract class Screen
     private function nav(): string
     {
         return $this->goesBack() ? sprintf("%s %s \n%s %s",
-            config('ussd.navigation.home'),
-            __("ussd::nav.home"),
-            config('ussd.navigation.previous'),
-            __("ussd::nav.back")
+            config('ussd.navigation.home'), __("ussd::nav.home"),
+            config('ussd.navigation.previous'), __("ussd::nav.back")
         ) : "";
     }
 
