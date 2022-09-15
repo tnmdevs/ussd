@@ -40,8 +40,7 @@ class Request extends BaseRequest
 
     public function toHomeScreen(): bool
     {
-        if ($this->getExistingSession()) return false;
-        return $this->isInitial();
+        return $this->isInitial() || !$this->getExistingSession();
     }
 
     public function isInvalid(): bool
