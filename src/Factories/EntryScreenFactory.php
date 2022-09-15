@@ -18,7 +18,7 @@ class EntryScreenFactory
 
     public function make()
     {
-        if ($this->request->toHomeScreen()) {
+        if ($this->request->navigatingHome() || $this->request->toHomeScreen()) {
             $screen = config('ussd.routing.landing_screen');
             /** @var Screen $screen */
             $instance = new $screen($this->request);
