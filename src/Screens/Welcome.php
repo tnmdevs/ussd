@@ -35,11 +35,11 @@ class Welcome extends Screen
      */
     protected function execute(): mixed
     {
-        // TODO: Implement execute() method.
+        return $this->render();
     }
 
     public function previous(): Screen
     {
-        // TODO: Implement previous() method.
+        return $this;
     }
 }

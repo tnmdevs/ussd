@@ -32,10 +32,16 @@ class Request extends BaseRequest
         return $this->message == config('ussd.navigation.previous');
     }
 
+
+    public function navigatingHome(): bool
+    {
+        return $this->message == config('ussd.navigation.home');
+    }
+
     public function toHomeScreen(): bool
     {
         if ($this->getExistingSession()) return false;
-        return $this->isInitial() || $this->message == config('ussd.navigation.home');
+        return $this->isInitial();
     }
 
     public function isInvalid(): bool
