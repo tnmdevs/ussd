@@ -12,7 +12,7 @@ class Request extends BaseRequest
 {
     const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
     public string $msisdn = '';
-    public $session;
+    public ?string $sessionId;
     public int $type;
     public string $message;
     public Session $trail;
@@ -23,7 +23,8 @@ class Request extends BaseRequest
         parent::__construct();
         $this->ussdRequest = (new RequestFactory())->make();
 
-        if ($this->isInvalid()) return;
+        if ($this->isInvalid())
+            return;
         $this->setRequestProperties()->setSessionLocale()->setSessionTrail();
     }
 
@@ -54,7 +55,7 @@ class Request extends BaseRequest
     private function setRequestProperties(): self
     {
         $this->msisdn = $this->ussdRequest->getMsisdn();
-        $this->session = $this->ussdRequest->getSession();
+        $this->sessionId = $this->ussdRequest->getSession();
         $this->type = $this->ussdRequest->getType();
         $this->message = $this->ussdRequest->getMessage();
         return $this;
@@ -62,9 +63,10 @@ class Request extends BaseRequest
 
     private function setSessionLocale(): self
     {
-        if (empty($this->session) || Session::notCreated($this->session)) return $this;
+        if (empty($this->sessionId) || Session::notCreated($this->sessionId))
+            return $this;
 
-        $session = Session::findBySessionId($this->session);
+        $session = Session::findBySessionId($this->sessionId);
         app()->setLocale($session->{'locale'});
         return $this;
     }
@@ -107,10 +109,11 @@ class Request extends BaseRequest
     private function getTrail(): Session
     {
         $existingSession = $this->getExistingSession();
-        if ($existingSession) return $existingSession->updateSessionId($this->session);
+        if ($existingSession)
+            return $existingSession->updateSessionId($this->sessionId);
 
         return Session::firstOrCreate(
-            ['session_id' => $this->session],
+            ['session_id' => $this->sessionId],
             ['state' => config('ussd.routing.landing_screen'), 'msisdn' => $this->msisdn]
         );
     }
