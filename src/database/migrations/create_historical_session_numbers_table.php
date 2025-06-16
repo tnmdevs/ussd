@@ -15,7 +15,11 @@ return new class extends Migration {
         Schema::create('historical_session_numbers', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('msisdn')->index();
-            $table->foreignId('session_id')->nullable()->constrained('historical_sessions')->cascadeOnDelete();
+            $table
+                ->foreignId('session_id')
+                ->nullable()
+                ->constrained('historical_sessions')
+                ->cascadeOnDelete();
             $table->string('ussd_session');
             $table->string('last_screen');
             $table->timestamps();
