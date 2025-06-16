@@ -12,7 +12,7 @@ class Request extends BaseRequest
 {
     const INITIAL = 1, RESPONSE = 2, RELEASE = 3, TIMEOUT = 4;
     public string $msisdn = '';
-    public ?string $sessionId;
+    public ?string $ussdSession;
     public int $type;
     public string $message;
     public Session $trail;
@@ -55,7 +55,7 @@ class Request extends BaseRequest
     private function setRequestProperties(): self
     {
         $this->msisdn = $this->ussdRequest->getMsisdn();
-        $this->sessionId = $this->ussdRequest->getSession();
+        $this->ussdSession = $this->ussdRequest->getSession();
         $this->type = $this->ussdRequest->getType();
         $this->message = $this->ussdRequest->getMessage();
         return $this;
@@ -63,10 +63,10 @@ class Request extends BaseRequest
 
     private function setSessionLocale(): self
     {
-        if (empty($this->sessionId) || Session::notCreated($this->sessionId))
+        if (empty($this->ussdSession) || Session::notCreated($this->ussdSession))
             return $this;
 
-        $session = Session::findBySessionId($this->sessionId);
+        $session = Session::findBySessionId($this->ussdSession);
         app()->setLocale($session->{'locale'});
         return $this;
     }
@@ -110,10 +110,10 @@ class Request extends BaseRequest
     {
         $existingSession = $this->getExistingSession();
         if ($existingSession)
-            return $existingSession->updateSessionId($this->sessionId);
+            return $existingSession->updateSessionId($this->ussdSession);
 
         return Session::firstOrCreate(
-            ['session_id' => $this->sessionId],
+            ['session_id' => $this->ussdSession],
             ['state' => config('ussd.routing.landing_screen'), 'msisdn' => $this->msisdn]
         );
     }

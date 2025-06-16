@@ -57,7 +57,8 @@ abstract class Screen
         $screen = config('ussd.routing.landing_screen');
         /** @var Screen $screen */
         $instance = new $screen($request);
-        if (!$request->trail->{'state'}) return $instance;
+        if (!$request->trail->{'state'})
+            return $instance;
         return new $request->trail->{'state'}($request);
     }
 
@@ -129,14 +130,16 @@ abstract class Screen
      */
     public function getItemAt($value): ?string
     {
-        if ($this->doesntHaveOptions()) return $value;
+        if ($this->doesntHaveOptions())
+            return $value;
         if (in_array($value, config('ussd.navigation'))) {
             return match ($value) {
                 config('ussd.navigation.home') => __('ussd::nav.home'),
                 config('ussd.navigation.previous') => __('ussd::nav.back'),
             };
         }
-        if (!array_key_exists($value - 1, $this->options())) return null;
+        if (!array_key_exists($value - 1, $this->options()))
+            return null;
         return $this->options()[$value - 1];
     }
 
@@ -161,7 +164,8 @@ abstract class Screen
      */
     public function getRequestValue(): string
     {
-        if ($this->withinRange()) return $this->getItemAt($this->request->message);
+        if ($this->withinRange())
+            return $this->getItemAt($this->request->message);
 
         return $this->request->message;
     }
@@ -193,9 +197,10 @@ abstract class Screen
     {
         $screen = static::getInstance($request);
 
-        TransactionTrail::add($screen->request->session, $screen->message(), $screen->value());
+        TransactionTrail::add($screen->request->ussdSession, $screen->message(), $screen->value());
 
-        if ($request->isNotUserResponse()) return $screen->render();
+        if ($request->isNotUserResponse())
+            return $screen->render();
 
         return $screen->execute();
     }
@@ -212,7 +217,8 @@ abstract class Screen
 
     public function withinRange(): bool
     {
-        if ($this->doesntHaveOptions() || $this->inOptions($this->request->message)) return true;
+        if ($this->doesntHaveOptions() || $this->inOptions($this->request->message))
+            return true;
 
         return $this->request->message == config('ussd.navigation.previous')
             || $this->request->message == config('ussd.navigation.home');
@@ -223,7 +229,8 @@ abstract class Screen
         if ($value == config('ussd.navigation.home') || $value == config('ussd.navigation.previous'))
             return true;
 
-        if (!is_numeric($value)) return false;
+        if (!is_numeric($value))
+            return false;
         return array_key_exists($value - 1, $this->options());
     }
 
@@ -234,9 +241,12 @@ abstract class Screen
 
     private function nav(): string
     {
-        return $this->goesBack() ? sprintf("%s %s \n%s %s",
-            config('ussd.navigation.home'), __("ussd::nav.home"),
-            config('ussd.navigation.previous'), __("ussd::nav.back")
+        return $this->goesBack() ? sprintf(
+            "%s %s \n%s %s",
+            config('ussd.navigation.home'),
+            __("ussd::nav.home"),
+            config('ussd.navigation.previous'),
+            __("ussd::nav.back")
         ) : "";
     }
 
@@ -247,7 +257,8 @@ abstract class Screen
 
     private function makeTrail(): void
     {
-        if ($this instanceof Error || $this->request->isTimeout() || $this->request->isReleased()) return;
+        if ($this instanceof Error || $this->request->isTimeout() || $this->request->isReleased())
+            return;
 
         $this->request->trail?->mark(static::class);
     }
