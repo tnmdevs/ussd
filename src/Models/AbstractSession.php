@@ -7,8 +7,6 @@ use Illuminate\Support\Collection;
 
 abstract class AbstractSession extends Model
 {
-    protected $table = 'ussd_sessions';
-
     protected $guarded = [];
 
     public static function findBySessionId(string $session): ?Session

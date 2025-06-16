@@ -4,7 +4,8 @@ namespace TNM\USSD\Models;
 
 class Session extends AbstractSession
 {
-
+    protected $table = 'ussd_sessions';
+    
     public static function recentSessionByPhone(string $phone): ?self
     {
         return Session::where('msisdn', $phone)
