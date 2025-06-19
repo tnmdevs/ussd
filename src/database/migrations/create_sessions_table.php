@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('sessions', function (Blueprint $table) {
+        Schema::create('ussd_sessions', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('session_id')->index();
             $table->string('state');
@@ -30,6 +30,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('session');
+        Schema::dropIfExists('ussd_sessions');
     }
 };
